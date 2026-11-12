@@ -1,0 +1,8 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>art dev</title><style>body{margin:0;background:#333;display:flex;flex-wrap:wrap;gap:8px}canvas{height:420px;width:auto;background:repeating-conic-gradient(#555 0 25%,#444 0 50%) 0/20px 20px}</style></head>
+<body><script type="module">
+import { ART } from '/src/cinema/art.js';
+window.__art = {};
+for (const [name, fn] of Object.entries(ART)) { const c = fn(); document.body.appendChild(c); window.__art[name] = c.toDataURL('image/png'); }
+window.__artReady = true;
+</script></body></html>

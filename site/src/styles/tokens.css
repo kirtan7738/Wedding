@@ -1,0 +1,38 @@
+/* Palette "Shubh Lagna" — kumkum red, maroon, marigold, haldi, gold foil, ivory (user, 12 Nov: red/orange wedding colours).
+   The ONLY place colours/fonts are defined. Legacy token names are kept as aliases so nothing breaks. */
+:root {
+  /* core */
+  --maroon-deep: #3d0710;
+  --maroon: #5e0b18;
+  --maroon-mid: #7a1020;
+  --kumkum: #b81f2c;
+  --red-bright: #d8392f;
+  --saffron: #e8681a;
+  --marigold: #f59e1b;
+  --marigold-deep: #e57712;
+  --haldi: #ffc83a;
+  --gold: #c99a3b;
+  --gold-deep: #9a6f22;
+  --gold-light: #f3d58a;
+  --gold-pale: #fff0c4;
+  --ivory: #fff7e8;
+  --cream: #fbedd2;
+  --paper: #f7e7c9;
+  --rose-light: #f6b8ad;
+  --rose-deep: #c9505a;
+  --leaf: #3f7a2c;
+  --ink: #3a170f;
+  --ink-soft: #6b3a24;
+
+  /* legacy aliases (older components / tests) */
+  --purple: #6e0f1c;
+  --green-deep: #5e0b18;
+  --sage: #fbedd2;
+
+  --foil: linear-gradient(100deg, #a8751f 0%, #f6dc8f 22%, #c4912f 42%, #fff4cf 52%, #c4912f 62%, #f1d37f 80%, #a8751f 100%);
+
+  --font-gu-display: 'Rasa', 'Noto Serif Gujarati', serif;
+  --font-gu-serif: 'Noto Serif Gujarati', 'Rasa', serif;
+  --font-gu-body: 'Hind Vadodara', 'Noto Sans Gujarati', sans-serif;
+  --font-latin: 'Cormorant Garamond', Georgia, serif;
+}

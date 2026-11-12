@@ -1,0 +1,14 @@
+node_modules/
+site/dist/
+site/dist-ssr/
+site/test-results/
+site/playwright-report/
+research/raw/
+research/screens/
+.playwright-mcp/
+/WhatsApp Image*.jpeg
+.superpowers/
+.vercel/
+*.log
+site/.scratch/
+site/public/benchmarks/

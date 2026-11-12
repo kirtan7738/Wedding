@@ -1,0 +1,41 @@
+/* Ornament styling — colours only from tokens (spec §6). */
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.ornament { display: block; line-height: 0; }
+.ornament svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.orn-rope { fill: none; stroke: url(#g-brass); stroke-width: 2.2; }
+.orn-line { fill: none; stroke: var(--gold); stroke-width: 1.2; }
+.orn-line--thin { stroke-width: 0.7; opacity: 0.8; }
+.orn-line--bold { stroke-width: 2; stroke: url(#g-gold); }
+.orn-gold-fill { fill: var(--gold); }
+.orn-soft { opacity: 0.55; }
+
+.orn-toran, .orn-garland-side, .orn-toran-bottom { filter: drop-shadow(0 4px 4px rgb(0 0 0 / 0.22)); }
+
+/* Seal */
+.seal-ring { fill: none; stroke: var(--gold-light); stroke-width: 1.2; opacity: 0.8; }
+.seal-ring--thin { stroke-width: 0.6; stroke-dasharray: 2 3; }
+.seal-mono {
+  font-family: var(--font-gu-display);
+  font-weight: 700;
+  font-size: 22px;
+  fill: var(--gold-light);
+  paint-order: stroke;
+  stroke: rgb(0 0 0 / 0.25);
+  stroke-width: 0.6px;
+}
+.seal-crack { fill: none; stroke: var(--gold-light); stroke-width: 1.4; stroke-linecap: round; filter: drop-shadow(0 0 3px var(--marigold)); }
+
+/* Diyas flicker + bells swing (paused under reduced motion) */
+.orn-diyas .flame, .orn-thali .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: diya-flicker 1.6s ease-in-out infinite alternate; }
+@keyframes diya-flicker {
+  0% { transform: scale(1, 1) rotate(-1deg); }
+  50% { transform: scale(0.94, 1.06) rotate(1.5deg); }
+  100% { transform: scale(1.03, 0.96) rotate(-0.5deg); }
+}
+.orn-toran .strand { animation: strand-sway 5s ease-in-out infinite alternate; }
+.orn-toran .strand:nth-child(odd) { animation-duration: 6.2s; animation-delay: -1.3s; }
+@keyframes strand-sway { from { transform: rotate(-1.2deg); } to { transform: rotate(1.2deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .orn-diyas .flame, .orn-thali .flame, .orn-toran .strand { animation: none; }
+}

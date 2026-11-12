@@ -1,0 +1,6 @@
+
+# local secrets (never commit)
+.env.local
+*.local
+art-src/
+*.tmp.mjs

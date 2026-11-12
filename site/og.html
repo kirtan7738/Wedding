@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="gu">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG card (build tool)</title>
+    <style>
+      html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+      .og {
+        position: relative; width: 1200px; height: 630px; overflow: hidden; display: grid; grid-template-columns: 470px 1fr; align-items: center;
+        color: var(--ivory);
+        background-color: var(--maroon);
+        background-image:
+          radial-gradient(70% 90% at 60% 45%, rgb(216 57 47 / 0.55), transparent 65%),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cg fill='%23ffd27a' fill-opacity='.28'%3E%3Ccircle cx='7.5' cy='7.5' r='1.25'/%3E%3Ccircle cx='5' cy='7.5' r='.85'/%3E%3Ccircle cx='10' cy='7.5' r='.85'/%3E%3Ccircle cx='7.5' cy='5' r='.85'/%3E%3Ccircle cx='7.5' cy='10' r='.85'/%3E%3Ccircle cx='22.5' cy='22.5' r='1.25'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: auto, 30px 30px;
+        box-shadow: inset 0 0 0 10px var(--maroon-deep), inset 0 0 0 12px var(--gold), inset 0 0 0 18px var(--maroon-deep), inset 0 0 0 19px rgb(201 154 59 / 0.6);
+      }
+      .toran { position: absolute; top: 0; left: 0; width: 1200px; height: 120px; overflow: hidden; z-index: 3; }
+      .toran .ornament { width: 600px; display: inline-block; }
+      .mandala { position: absolute; left: 235px; top: 330px; width: 640px; translate: -50% -50%; opacity: 0.6; }
+      .arch { position: relative; margin-left: 105px; width: 300px; aspect-ratio: 260 / 330; margin-top: 70px; filter: drop-shadow(0 18px 26px rgb(0 0 0 / 0.5)); }
+      .clip { position: absolute; left: 6.2%; right: 6.2%; top: 9.6%; bottom: 3.6%; overflow: hidden; border-radius: 50% 50% 4px 4px / 37% 37% 4px 4px; }
+      .clip img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 82%; transform: scale(1.32); transform-origin: 52% 80%; }
+      .arch .ornament { position: absolute; inset: 0; }
+      .arch .orn-line { stroke: var(--gold-light); stroke-width: 1.6; }
+      .arch .orn-gold-fill { fill: var(--gold-light); }
+      .text { position: relative; z-index: 2; text-align: center; padding: 70px 50px 0 10px; }
+      .inv { font-family: var(--font-gu-serif); font-weight: 600; color: var(--gold-light); font-size: 26px; margin: 0 0 6px; }
+      .mangal { width: 360px; margin: 0 auto 10px; fill: url(#g-foil); }
+      .names { display: flex; align-items: center; justify-content: center; gap: 18px; }
+      .names .lettering { fill: url(#g-foil); }
+      .princy { width: 300px; } .parth { width: 250px; }
+      .amp { color: var(--marigold); font-size: 40px; text-shadow: 0 0 12px rgb(245 158 27 / 0.7); }
+      .date { margin: 18px 0 0; font-weight: 600; font-size: 36px; color: var(--ivory); }
+      .venue { margin: 4px 0 0; font-size: 28px; color: var(--gold-light); }
+      .lettering svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.35)); }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import './src/styles/tokens.css';
+      import './src/styles/fonts.css';
+      import './src/styles/ornaments.css';
+      import defs from './src/assets/ornaments/defs.svg?raw';
+      import toran from './src/assets/ornaments/toran-short.svg?raw';
+      import mandala from './src/assets/ornaments/mandala.svg?raw';
+      import arch from './src/assets/ornaments/arch.svg?raw';
+      import mangal from './src/assets/lettering/mangal.svg?raw';
+      import princy from './src/assets/lettering/princy.svg?raw';
+      import parth from './src/assets/lettering/parth.svg?raw';
+      import wedding from './src/content/wedding.js';
+      const css = `.orn-mandala .m-ring{fill:none;stroke:var(--gold);stroke-width:1;opacity:.55}.orn-mandala .m-thin{stroke-width:.5;opacity:.4}.orn-mandala .m-petal{fill:rgb(201 154 59/.12);stroke:var(--gold);stroke-width:.8;opacity:.7}.orn-mandala .m-dot{fill:var(--gold-light);opacity:.65}.orn-mandala .m-star{fill:rgb(201 154 59/.2);stroke:var(--gold);stroke-width:.8}.orn-mandala .m-core{fill:var(--gold)}`;
+      document.getElementById('root').innerHTML = `${defs}<style>${css}</style>
+        <div class="og">
+          <div class="toran"><span class="ornament">${toran}</span><span class="ornament">${toran}</span></div>
+          <div class="mandala ornament">${mandala}</div>
+          <div class="arch"><div class="clip"><img src="/img/couple-facing-960.webp" alt=""></div><span class="ornament">${arch}</span></div>
+          <div class="text">
+            <p class="inv">${wedding.invocation}</p>
+            <div class="lettering mangal">${mangal}</div>
+            <div class="names"><span class="lettering princy">${princy}</span><span class="amp">❀</span><span class="lettering parth">${parth}</span></div>
+            <p class="date">${wedding.dateText}</p>
+            <p class="venue">${wedding.venue.short}</p>
+          </div>
+        </div>`;
+      Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => {}))]).then(() => (window.__ogReady = true));
+    </script>
+  </body>
+</html>

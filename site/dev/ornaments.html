@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="gu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ornament gallery (dev only)</title>
+  </head>
+  <body style="background: var(--paper)">
+    <div id="root"></div>
+    <script type="module">
+      import { createRoot } from 'react-dom/client';
+      import { createElement as h } from 'react';
+      import '../src/styles/base.css';
+      import Ornament, { ORNAMENT_NAMES } from '../src/components/Ornament.jsx';
+      import SvgDefs from '../src/components/SvgDefs.jsx';
+      createRoot(document.getElementById('root')).render(
+        h('div', { style: { width: 390, margin: '0 auto', padding: 16, display: 'grid', gap: 24 } },
+          h(SvgDefs),
+          ...ORNAMENT_NAMES.map((n) =>
+            h('figure', { key: n, style: { margin: 0 } },
+              h('figcaption', { className: 'latin', style: { fontSize: 13, color: '#6b5b3a' } }, n),
+              h('div', { style: { width: n === 'garland-side' ? 40 : n === 'seal' ? 140 : n === 'union' || n === 'thali' ? 120 : n === 'arch' ? 260 : 358, background: n === 'seal' ? 'transparent' : 'transparent' } }, h(Ornament, { name: n })),
+              n === 'seal' ? null : null,
+            )),
+          h('img', { src: '/img/ganesh.webp', width: 80, alt: '' }),
+        ),
+      );
+    </script>
+  </body>
+</html>

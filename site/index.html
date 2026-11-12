@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="gu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#5E0B18" />
+    <title>પ્રિન્સી ❀ પાર્થ — શુભ લગ્ન</title>
+    <meta name="description" content="રવિવાર, ૧૩/૧૨/૨૦૨૬ · અતિથી પાર્ટી પ્લોટ, પેટલાદ" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="gu_IN" />
+    <meta property="og:title" content="પ્રિન્સી ❀ પાર્થ — શુભ લગ્ન" />
+    <meta property="og:description" content="રવિવાર, ૧૩/૧૨/૨૦૨૬ · અતિથી પાર્ટી પ્લોટ, પેટલાદ" />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og.png" />
+    <script>
+      // Reveal targets are hidden only when JS runs; if the app never boots, show everything (spec §6.1).
+      document.documentElement.classList.add('js');
+      // Returning in the same session (e.g. back button): skip the cover without a flash.
+      try {
+        if (sessionStorage.getItem('kankotri-opened')) document.documentElement.classList.add('opened');
+      } catch (e) {}
+      // Fail-safe only on a real failure (script load error) or a very late boot — never on a merely slow network.
+      var failSafe = function () {
+        if (!window.__booted) document.documentElement.classList.remove('js');
+      };
+      window.addEventListener('error', function (e) { if (e.target && e.target.tagName === 'SCRIPT') failSafe(); }, true);
+      setTimeout(failSafe, 15000);
+      // A tap on the cover before the app is listening is remembered and replayed once it boots.
+      document.addEventListener('click', function (e) {
+        if (!window.__booted && e.target.closest && e.target.closest('.cover')) {
+          window.__pendingOpen = true;
+          document.documentElement.classList.add('pending-open');
+        }
+      }, true);
+    </script>
+  </head>
+  <body>
+    <div id="root"><!--app--></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
