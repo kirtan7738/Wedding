@@ -46,6 +46,12 @@ const RULES = {
   lamp: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   diya: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   birds: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  // round 9 — the haveli gate
+  'haveli-doorway': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'door-toran': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'haveli-threshold': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'samai-pair': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'door-kadi': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
 };
 
 const img = sharp(src).ensureAlpha();
@@ -238,7 +244,7 @@ for (const rule of RULES[name] || []) {
 // magenta spill: soft glows (halos, smoke, cloud edges) painted against the pink backdrop pick up a pink-lavender
 // cast. Within a band near the cut-out edge, pull magenta-tinted pixels back to neutral/warm (the subject's own
 // pinks, deeper inside, are untouched).
-const DESPILL = { 'devta-left': 60, 'devta-right': 60, pheras: 70, clouds: 60 };
+const DESPILL = { 'devta-left': 60, 'devta-right': 60, pheras: 70, clouds: 60, 'haveli-doorway': 10, 'samai-pair': 40, 'haveli-threshold': 30, 'door-toran': 12 };
 if (DESPILL[name]) {
   const band = DESPILL[name];
   const dist = new Int32Array(W * H).fill(1e9);

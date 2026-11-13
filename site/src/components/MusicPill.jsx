@@ -15,7 +15,7 @@ export default function MusicPill({ player, src = wedding.music.src, label = wed
       type="button"
       className={`music-pill ${playing ? 'is-playing' : ''} ${visible ? 'is-visible' : ''}`}
       aria-pressed={playing}
-      aria-label={playing ? 'સંગીત બંધ કરો' : 'સંગીત ચાલુ કરો'}
+      aria-label={playing ? wedding.copy.musicOff : wedding.copy.musicOn}
       onClick={() => player.toggle()}
     >
       <span className="music-icon" aria-hidden="true">

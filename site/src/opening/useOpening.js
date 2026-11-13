@@ -168,6 +168,20 @@ export function useOpening(worldRef) {
     open();
   }, [player, open]);
 
+  // The brass knocker (user, 13 Nov: haveli gate): two knocks, then the doors swing. A swipe opens at once.
+  const knocking = useRef(false);
+  const [knocked, setKnocked] = useState(false);
+  const knock = useCallback(() => {
+    if (openedRef.current || knocking.current) return;
+    knocking.current = true;
+    player?.unlock(); // inside the tap
+    sfxRef.current?.knock?.();
+    navigator.vibrate?.([12, 80, 10]);
+    setKnocked(true);
+    if (tierRef.current === 'static') open();
+    else setTimeout(open, 560);
+  }, [player, open]);
+
   const skip = useCallback(() => {
     const tl = tlRef.current;
     if (!tl) return;
@@ -175,5 +189,5 @@ export function useOpening(worldRef) {
     tl.progress(1, false);
   }, []);
 
-  return { refs, state, tier, player, sfx: sfxRef, open, skip, fxRef };
+  return { refs, state, tier, player, sfx: sfxRef, open, knock, knocked, skip, fxRef };
 }

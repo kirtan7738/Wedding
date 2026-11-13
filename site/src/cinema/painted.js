@@ -98,6 +98,70 @@ export const LAYERS = [
   // (far-shore skyline removed: the open lake gives the couple's scene room to breathe — user, 13 Nov)
 ];
 
+// --- the hero, redesigned (user, 13 Nov): inside the haveli chowk. These pieces switch on as soon as the painted
+// back wall (round 10 #61) exists; until then the garden hero above stays. Placements are provisional until the art
+// is in (re-measured then). Camera at the hero: [0, 3.9, −3.6] looking at [0, 3.55, −16]; phones see ±2.7 m at z −16.
+export const CHOWK = [
+  { src: 'chowk-backwall', pos: [0, 0, -21], h: 9.2 },
+  { src: 'chowk-sidewall', pos: [-7.2, 0, -15.5], h: 7.4, rotY: 0.95 },
+  { src: 'chowk-sidewall', pos: [7.2, 0, -15.5], h: 7.4, rotY: -0.95, flip: true },
+  { src: 'peacock', pos: [-5.6, 8.2, -20.8], h: 2.2 },
+  { src: 'peacock', pos: [5.6, 8.2, -20.8], h: 2.2, flip: true },
+  { src: 'plantain', pos: [-3.1, 0, -16.2], h: 3.6, sway: 0.7 },
+  { src: 'plantain', pos: [3.1, 0, -16.2], h: 3.5, sway: 0.7, flip: true },
+  { src: 'couple-havan', pos: [0, 0.5, -15.9], h: 1.75 },
+  { src: 'chori', pos: [0, 0, -15.6], h: 5.0 },
+  { src: 'tulsi-kyaro', pos: [-3.3, 0, -12.6], h: 1.55, portrait: { pos: [-1.95, 0, -12.2], h: 1.15 } },
+  { src: 'samai-pair', pos: [3.2, 0, -12.8], h: 2.1, portrait: { pos: [1.95, 0, -12.3], h: 1.5 } },
+  { src: 'kalash', pos: [-1.55, 0, -13.2], h: 0.7 },
+  { src: 'kalash', pos: [1.55, 0, -13.2], h: 0.7, flip: true },
+  { src: 'garland-swag', pos: [0, 6.6, -11.2], h: 2.2, sway: 0.3, hang: true },
+  { src: 'garland-swag', pos: [0, 7.8, -17.5], h: 3.4, sway: 0.25, hang: true, flip: true },
+  { src: 'brass-jhoomar', pos: [0, 7.4, -13.4], h: 2.2, sway: 0.15, hang: true },
+].map((l) => ({ ...l, set: 'chowk' }));
+// everything of the garden hero (behind the doors, except the gods and their clouds) is the 'garden' set
+for (const l of LAYERS) if (l.pos[2] < -5 && !['clouds', 'devta-left', 'devta-right'].includes(l.src)) l.set ||= 'garden';
+LAYERS.push(...CHOWK);
+
+/** Show the chowk hero if its back wall is painted, else the garden one. Returns true when the chowk is on. */
+export function chooseHero(meshes) {
+  const chowk = meshes.loaded.has('chowk-backwall');
+  for (const m of meshes) {
+    const set = m.userData.layer.set;
+    if (set === 'chowk' || set === 'garden') m.visible = set === (chowk ? 'chowk' : 'garden');
+  }
+  return chowk;
+}
+
+// --- the cover, redesigned (round 9): the Gujarati pol-haveli doorway. Measured on the painting (746×1282 px):
+// the door opening spans x 227–516 and y 787–1196 (its sill to 1220), the plinths stand on the bottom row. At 9 m tall
+// (7.02 mm/px) the opening is 2.04 m wide, from 0.59 m (sill) to 3.47 m — the camera's flight line (y ≈ 2.6 at the
+// door) passes cleanly through it, and the whole facade fits a phone's frame.
+export const HAVELI = { h: 9, openW: 2.04, openTop: 3.47, sill: 0.59 };
+export const COVER_HAVELI = [
+  { src: 'haveli-doorway', pos: [0, 0, 0.12], h: HAVELI.h, tag: 'gate' },
+  // the toran hangs from the lintel, its marigolds ending just above the sathiya on the doors
+  { src: 'door-toran', pos: [0, 3.2, 0.2], h: 0.64, sway: 0.35, hang: true },
+  // the threshold: three steps and a rangoli in front of the door
+  { src: 'haveli-threshold', pos: [0, 0, 1.15], h: 1.45 },
+  // tall brass samai lamps either side
+  { src: 'samai-pair', pos: [-1.95, 0, 0.95], h: 1.85, portrait: { pos: [-1.22, 0.05, 1.55], h: 1.45 } },
+  { src: 'samai-pair', pos: [1.95, 0, 0.95], h: 1.85, flip: true, portrait: { pos: [1.22, 0.05, 1.55], h: 1.45 } },
+].map((l) => ({ ...l, set: 'haveli' }));
+// the Mughal ivory gate and the pieces placed on it make way for the haveli
+for (const l of LAYERS) if (l.pos[2] > -5 && ['gate', 'toran', 'kalash', 'peacock'].includes(l.src)) l.set ||= 'mughal';
+LAYERS.push(...COVER_HAVELI);
+
+/** Show the haveli cover if its doorway is painted, else the Mughal gate. Returns true when the haveli is on. */
+export function chooseCover(meshes) {
+  const haveli = meshes.loaded.has('haveli-doorway');
+  for (const m of meshes) {
+    const set = m.userData.layer.set;
+    if (set === 'haveli' || set === 'mughal') m.visible = set === (haveli ? 'haveli' : 'mughal');
+  }
+  return haveli;
+}
+
 const SOFT = new Set(['grass', 'bougainvillea']);
 /** a soft round glow, drawn once (halo + sparkle sprites) */
 const GLOW = (() => {

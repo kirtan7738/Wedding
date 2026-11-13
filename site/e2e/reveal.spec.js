@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const tapOpen = (page) => page.getByRole('button', { name: /આમંત્રણ ખોલો/ }).click();
+const tapOpen = (page) => page.getByRole('button', { name: /દ્વાર ખોલો/ }).click();
 
 const namesDone = (page) =>
   page.evaluate(() =>

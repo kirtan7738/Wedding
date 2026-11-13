@@ -49,11 +49,14 @@ export function useCinema(tier, worldRef) {
         // tap anywhere on the page (not on a control) → petals burst from that spot
         const onTap = (e) => {
           if (!html.classList.contains('opened')) return;
-          if (e.target.closest?.('a, button, iframe, input, .cover, .arch-panel')) return;
+          if (e.target.closest?.('a, button, iframe, input, .cover, .arch-panel, .scratch')) return;
           world.tapBurst(e.clientX, e.clientY);
           navigator.vibrate?.(8);
         };
         window.addEventListener('pointerdown', onTap, { passive: true });
+        // a section celebrates (e.g. the date fully revealed): petals burst from the given points
+        const onCelebrate = (e) => (e.detail?.points || []).forEach(([x, y], i) => setTimeout(() => world.tapBurst(x, y), i * 140));
+        window.addEventListener('kk-celebrate', onCelebrate);
 
         const onVis = () => world.setPaused(document.hidden);
         document.addEventListener('visibilitychange', onVis);
@@ -69,6 +72,7 @@ export function useCinema(tier, worldRef) {
         cleanup = () => {
           window.removeEventListener('scroll', onScroll);
           window.removeEventListener('pointerdown', onTap);
+          window.removeEventListener('kk-celebrate', onCelebrate);
           document.removeEventListener('visibilitychange', onVis);
           world.destroy();
         };

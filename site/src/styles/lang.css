@@ -1,0 +1,361 @@
+/* Language (user, 13 Nov): the choose-language screen, the switch pill, and English typography. */
+
+/* ---------- English: the same layout, set in Cormorant Garamond (display) and Hind Vadodara latin (body) ---------- */
+html.lang-en,
+html[lang='en'] {
+  --font-gu-display: 'Cormorant Garamond', Georgia, serif;
+  --font-gu-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-gu-body: 'Hind Vadodara', 'Helvetica Neue', Arial, sans-serif;
+}
+/* Cormorant runs small: lift the display sizes a touch, and give titles a little air (Latin may be letter-spaced) */
+html[lang='en'] main.en .section-title,
+html[lang='en'] .kk-cover-title,
+html[lang='en'] .cover-title {
+  letter-spacing: 0.02em;
+  font-weight: 600;
+}
+/* the invitation reads like a letter: Cormorant for the lines, the names large in italic gold */
+html[lang='en'] main.en .inv-line:not(.inv-name) { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.22rem; font-weight: 500; line-height: 1.6; }
+html[lang='en'] main.en .inv-line strong { font-weight: 600; }
+html[lang='en'] main.en .inv-name { font-style: italic; font-weight: 600; font-size: 2.3rem; line-height: 1.15; }
+html[lang='en'] main.en .inv-name strong { font-weight: 600; }
+
+/* an English guest who chose before: wait for the app instead of flashing the Gujarati prerender */
+html.js.lang-en:not(.booted) #root { visibility: hidden; }
+/* a stored choice (or a same-session return) never shows the language screen, even before the app boots */
+html.lang-stored .lang-gate,
+html.opened .lang-gate { display: none; }
+
+/* ---------- The choose-language screen ---------- */
+.lang-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 70; /* above the envelope (60) */
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: var(--maroon);
+  background:
+    radial-gradient(120% 70% at 50% 42%, rgb(255 236 190 / 0.85) 0%, rgb(255 247 232 / 0) 62%),
+    url('/img/art/patra-paper.webp') center / cover,
+    var(--ivory);
+}
+.lang-gate::after {
+  /* soft warm vignette, like old paper */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 18vmin rgb(150 90 30 / 0.28);
+}
+
+.lg-toran {
+  position: absolute;
+  top: -1.2vmin;
+  left: 50%;
+  width: max(100vw, 520px);
+  height: auto;
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  animation: lg-sway 5.5s ease-in-out infinite;
+  filter: drop-shadow(0 6px 8px rgb(90 40 10 / 0.25));
+  z-index: 2;
+}
+@keyframes lg-sway {
+  0%, 100% { transform: translateX(-50%) rotate(-0.5deg); }
+  50% { transform: translateX(-50%) rotate(0.5deg); }
+}
+
+.lg-inner {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  width: min(92vw, 30rem);
+  padding: clamp(5.5rem, 22vw, 9rem) 1rem 5.5rem;
+  text-align: center;
+}
+
+.lg-ganesh {
+  width: clamp(76px, 22vw, 104px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 6px;
+  background: var(--foil);
+  box-shadow: 0 6px 18px rgb(120 70 10 / 0.28), 0 0 0 4px rgb(255 247 232 / 0.9), 0 0 0 5px rgb(201 154 59 / 0.6);
+  animation: lg-breathe 4s ease-in-out infinite;
+}
+.lg-ganesh img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: var(--ivory); }
+@keyframes lg-breathe {
+  0%, 100% { box-shadow: 0 6px 18px rgb(120 70 10 / 0.28), 0 0 0 4px rgb(255 247 232 / 0.9), 0 0 0 5px rgb(201 154 59 / 0.6), 0 0 0 0 rgb(245 158 27 / 0); }
+  50% { box-shadow: 0 6px 18px rgb(120 70 10 / 0.28), 0 0 0 4px rgb(255 247 232 / 0.9), 0 0 0 5px rgb(201 154 59 / 0.6), 0 0 28px 8px rgb(245 158 27 / 0.35); }
+}
+
+.lg-invocation { margin: 0.2rem 0 0; font-family: 'Noto Serif Gujarati', serif; font-size: 0.92rem; color: var(--gold-deep); }
+
+.lg-title { margin: 0.4rem 0 0.6rem; display: flex; flex-direction: column; gap: 0.1rem; line-height: 1.2; }
+.lg-title-gu { font-family: 'Rasa', 'Noto Serif Gujarati', serif; font-weight: 700; font-size: clamp(1.9rem, 8.4vw, 2.4rem); color: var(--maroon); }
+.lg-title-en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; font-size: clamp(1.05rem, 4.6vw, 1.25rem); color: var(--gold-deep); letter-spacing: 0.04em; }
+
+.lg-choices { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.8rem, 4vw, 1.4rem); width: 100%; margin-top: 0.4rem; }
+
+.lg-choice {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* each choice is a little mandir doorway: a domed arch in gold leaf around ivory */
+.lg-door {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.15rem;
+  min-height: clamp(178px, 52vw, 220px);
+  padding: clamp(2.1rem, 10vw, 2.6rem) 0.5rem 0;
+  border-radius: 50% 50% 14px 14px / 30% 30% 14px 14px;
+  background:
+    radial-gradient(90% 60% at 50% 100%, rgb(255 200 90 / 0.18), transparent 70%),
+    linear-gradient(180deg, #fffaf0, #fbefd8);
+  box-shadow:
+    inset 0 0 0 2px rgb(255 255 255 / 0.85),
+    inset 0 0 0 4px rgb(201 154 59 / 0.85),
+    inset 0 0 0 9px rgb(255 247 232 / 0.95),
+    inset 0 0 0 10px rgb(184 31 44 / 0.45),
+    0 10px 24px rgb(110 50 10 / 0.18);
+  transition: transform 0.25s ease, box-shadow 0.4s ease;
+}
+.lg-door::before {
+  /* a tiny kalash finial on the arch */
+  content: '❖';
+  position: absolute;
+  top: -0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  color: var(--gold);
+  text-shadow: 0 1px 0 #fff;
+}
+.lg-choice:hover .lg-door,
+.lg-choice:focus-visible .lg-door { transform: translateY(-3px); }
+.lg-choice:focus-visible { outline: none; }
+.lg-choice:focus-visible .lg-door { box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px var(--gold), inset 0 0 0 9px var(--ivory), inset 0 0 0 10px var(--kumkum), 0 0 0 3px var(--marigold); }
+.lg-choice:active .lg-door { transform: scale(0.98); }
+
+.lg-name { display: block; line-height: 1.15; color: var(--maroon); }
+.lg-name--gu { font-family: 'Rasa', 'Noto Serif Gujarati', serif; font-weight: 700; font-size: clamp(1.6rem, 7.2vw, 2rem); }
+.lg-name--en { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: clamp(1.7rem, 7.6vw, 2.1rem); letter-spacing: 0.02em; }
+.lg-sub { font-size: 0.95rem; color: var(--gold-deep); }
+.lg-sub.latin { font-style: italic; letter-spacing: 0.06em; }
+.lg-sub.gu { font-family: 'Hind Vadodara', sans-serif; }
+
+.lg-diya { position: absolute; left: 50%; bottom: 0.7rem; width: 58%; transform: translateX(-50%); }
+.lg-diya img { display: block; width: 100%; height: auto; filter: drop-shadow(0 4px 4px rgb(90 40 10 / 0.25)); }
+/* a soft flame that flickers; tapping lights it up */
+.lg-flame {
+  position: absolute;
+  left: 3%; /* on the wick, at the diya's left tip */
+  top: -46%;
+  width: 34%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 214 120 / 0.55) 0%, rgb(255 170 60 / 0.18) 45%, transparent 70%);
+  animation: lg-flicker 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes lg-flicker {
+  0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+  40% { opacity: 1; transform: translateX(-50%) scale(1.12); }
+  70% { opacity: 0.85; transform: translateX(-50%) scale(0.96); }
+}
+.lg-choice.is-lit .lg-flame { animation: lg-lit 0.9s ease-out forwards; }
+@keyframes lg-lit {
+  to { opacity: 1; transform: translateX(-50%) scale(3.2); background: radial-gradient(circle, rgb(255 226 150 / 0.75) 0%, rgb(255 170 60 / 0.25) 45%, transparent 70%); }
+}
+.lg-choice.is-lit .lg-door { box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px var(--gold), inset 0 0 0 9px var(--ivory), inset 0 0 0 10px var(--kumkum), 0 0 34px 6px rgb(245 158 27 / 0.45); }
+
+.lg-couple { margin: 1.1rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; font-size: 1rem; color: var(--maroon-mid); }
+.lg-couple .gu { font-family: 'Rasa', serif; font-weight: 700; }
+.lg-couple .latin { font-style: italic; font-size: 1.08rem; }
+.lg-dot { color: var(--gold); }
+.lg-note { margin: 0; display: flex; flex-direction: column; font-size: 0.78rem; color: var(--ink-soft); opacity: 0.8; line-height: 1.4; }
+.lg-note .latin { font-style: italic; font-size: 0.86rem; }
+
+.lg-kalash {
+  position: absolute;
+  bottom: -1.5vmin;
+  width: clamp(70px, 20vw, 120px);
+  height: auto;
+  z-index: 2;
+  filter: drop-shadow(0 6px 8px rgb(90 40 10 / 0.25));
+}
+.lg-kalash--l { left: -2vmin; }
+.lg-kalash--r { right: -2vmin; transform: scaleX(-1); }
+
+/* a few marigold petals drifting down */
+.lg-petals { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.lg-petals i {
+  position: absolute;
+  top: -4vh;
+  left: calc(6% + var(--i) * 10.5%);
+  width: 9px;
+  height: 13px;
+  border-radius: 60% 60% 50% 50% / 70% 70% 40% 40%;
+  background: linear-gradient(160deg, #ffc23d, #e8681a);
+  opacity: 0.75;
+  animation: lg-fall calc(9s + var(--i) * 0.9s) linear infinite;
+  animation-delay: calc(var(--i) * -1.7s);
+}
+.lg-petals i:nth-child(3n) { background: linear-gradient(160deg, #f6b8ad, #c9505a); }
+@keyframes lg-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(5vw, 55vh, 0) rotate(200deg); }
+  100% { transform: translate3d(-3vw, 112vh, 0) rotate(420deg); }
+}
+
+/* the exit, once a language is picked (CSS, so it keeps real time while the 3D world loads) */
+.lang-gate.is-picked { pointer-events: none; animation: lg-out 0.6s ease-in-out 1.15s forwards; }
+.lang-gate.is-picked .lg-choice.is-lit .lg-door { animation: lg-pop 0.45s cubic-bezier(0.34, 1.8, 0.64, 1) forwards; }
+.lang-gate.is-picked .lg-choice:not(.is-lit) { animation: lg-bow 0.45s ease-in forwards; }
+.lang-gate.is-picked .lg-toran { animation: lg-lift 0.9s ease-in 0.55s forwards; }
+.lang-gate.is-picked .lg-kalash { animation: lg-sink 0.6s ease-in 0.55s forwards; }
+.lang-gate.is-picked .lg-inner { animation: lg-fade-up 0.8s ease-in 0.75s forwards; }
+@keyframes lg-out { to { opacity: 0; visibility: hidden; } }
+@keyframes lg-pop { to { scale: 1.06; } }
+@keyframes lg-bow { to { opacity: 0; translate: 0 14px; scale: 0.94; } }
+@keyframes lg-lift { to { translate: 0 -110%; } }
+@keyframes lg-sink { to { opacity: 0; translate: 0 30px; } }
+@keyframes lg-fade-up { to { opacity: 0; scale: 1.04; filter: blur(6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .lang-gate.is-picked { animation-delay: 0s; animation-duration: 0.35s; }
+  .lang-gate.is-picked * { animation: none !important; }
+}
+
+@media (min-width: 900px) {
+  .lg-inner { padding-top: 10rem; }
+  .lg-kalash { width: 140px; }
+}
+@media (max-height: 640px) {
+  .lg-inner { padding-top: 4.5rem; padding-bottom: 3.5rem; gap: 0.3rem; }
+  .lg-ganesh { width: 64px; }
+  .lg-door { min-height: 150px; padding-top: 1.7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-toran, .lg-ganesh, .lg-flame, .lg-petals i { animation: none; }
+  .lg-petals { display: none; }
+}
+
+/* ---------- Switch pill (top right, once the doors are open) ---------- */
+.lang-toggle {
+  position: fixed;
+  top: max(0.8rem, env(safe-area-inset-top));
+  right: max(0.8rem, env(safe-area-inset-right));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 48px;
+  padding: 0.3rem 0.9rem 0.3rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgb(201 154 59 / 0.8);
+  background: rgb(255 247 232 / 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--maroon);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  box-shadow: 0 6px 16px rgb(90 40 10 / 0.18);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  cursor: pointer;
+}
+.lang-toggle.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.lang-toggle svg { width: 18px; height: 18px; fill: var(--gold-deep); }
+html[lang='en'] .lang-toggle span { font-family: 'Rasa', 'Noto Serif Gujarati', serif; font-weight: 700; }
+html[lang='gu'] .lang-toggle span { font-family: 'Cormorant Garamond', serif; font-size: 1.02rem; }
+
+/* ---------- The brass kadi on the door button (user, 13 Nov: haveli gate) ---------- */
+.cta--kadi { padding-top: 0.55rem; gap: 0.05rem; }
+.kadi { position: relative; display: block; width: 46px; height: 56px; margin-bottom: 0.1rem; }
+.kadi-plate {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #7a4a12 0 16%, transparent 17%),
+    radial-gradient(circle at 38% 32%, #fff3c4 0%, #f2c867 26%, #b9822a 60%, #6e4310 100%);
+  box-shadow: 0 2px 4px rgb(60 25 5 / 0.45), inset 0 -2px 3px rgb(80 40 8 / 0.5);
+}
+.kadi-plate::before {
+  /* lotus petals around the plate */
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 15deg, #e2b456 0 20deg, transparent 20deg 45deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 13px, #000 13.5px 18px, transparent 18.5px);
+  mask: radial-gradient(circle, transparent 0 13px, #000 13.5px 18px, transparent 18.5px);
+  opacity: 0.7;
+}
+.kadi-ring {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 32px;
+  height: 32px;
+  margin-left: -16px;
+  border-radius: 50%;
+  border: 4.5px solid #d8a540;
+  border-top-color: #fff0b8;
+  border-bottom-color: #7a4c12;
+  box-shadow: 0 2px 3px rgb(60 25 5 / 0.45);
+  transform-origin: 50% 0;
+  animation: kadi-idle 3.2s ease-in-out infinite;
+}
+@keyframes kadi-idle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+/* two knocks: the ring lifts toward the guest and strikes the plate */
+.cover.is-knocked .kadi-ring { animation: kadi-knock 0.6s ease-in-out forwards; }
+@keyframes kadi-knock {
+  0% { transform: none; }
+  18% { transform: scaleY(0.55) translateY(-3px); }
+  30% { transform: none; }
+  58% { transform: scaleY(0.55) translateY(-3px); }
+  70% { transform: none; }
+  100% { transform: none; }
+}
+.cover.is-knocked .kadi-plate { animation: kadi-jolt 0.6s ease-out; }
+@keyframes kadi-jolt { 0%, 100% { transform: translateX(-50%); } 30%, 70% { transform: translateX(-50%) scale(0.94); } }
+@media (prefers-reduced-motion: reduce) {
+  .kadi-ring, .cover.is-knocked .kadi-ring, .cover.is-knocked .kadi-plate { animation: none; }
+}
+
+/* the painted lion knocker (round 9 #46): it rocks on its hinge and strikes twice */
+.kadi.has-art { width: 58px; height: 62px; margin-top: -0.25rem; }
+.kadi-art { display: block; width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 20%; filter: drop-shadow(0 3px 4px rgb(40 10 0 / 0.45)); animation: kadi-idle 3.2s ease-in-out infinite; }
+.cover.is-knocked .kadi-art { animation: kadi-art-knock 0.6s ease-in-out forwards; }
+@keyframes kadi-art-knock {
+  0% { transform: none; }
+  18% { transform: perspective(200px) rotateX(-28deg) scale(0.96); }
+  30% { transform: none; }
+  58% { transform: perspective(200px) rotateX(-28deg) scale(0.96); }
+  70%, 100% { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kadi-art, .cover.is-knocked .kadi-art { animation: none; }
+}

@@ -2,6 +2,7 @@
  * Small ceremonial sound effects, synthesised with Web Audio (no files, ~0 KB):
  *   intro() — on the envelope tap: a temple bell, the wax seal cracking, paper as the flap opens and the card is
  *             drawn out, two soft page turns for the gatefold, and a rising chime into the zoom.
+ *   knock() — on the brass knocker: two knocks of a brass ring on teak (a dull thud + a short metallic clink).
  *   door()  — on the door tap: a low wooden creak as the doors swing, and the shehnai recording (if provided at
  *             shehnaiSrc) rising over it; tiny chimes as the gods' flowers begin to fall.
  * Timings mirror IntroEnvelope's and the cinema opening's timelines. All quiet: the song stays the star.
@@ -138,6 +139,20 @@ export function createSfx({ getContext, fetchImpl = globalThis.fetch?.bind(globa
       hiss(ctx, d, t + 3.65, { dur: 0.5, freq: 2800, sweepTo: 1300, q: 0.9, peak: 0.1 }); // right page
       chimes(ctx, d, t + 4.45, 6, 0.05); // into the zoom
       decodeShehnai(ctx); // get it ready for the door tap
+    },
+    /** call on the knocker tap, before the doors open */
+    knock() {
+      const ctx = getContext();
+      if (!ctx) return;
+      const t = ctx.currentTime + 0.01;
+      const d = out(ctx);
+      [0, 0.3].forEach((k, i) => {
+        const p = i ? 0.8 : 1;
+        tone(ctx, d, t + k, 118, 0.32 * p, 0.16, 'triangle'); // the teak
+        tone(ctx, d, t + k, 1660, 0.07 * p, 0.22); // the brass ring
+        tone(ctx, d, t + k + 0.004, 2490, 0.04 * p, 0.14);
+        hiss(ctx, d, t + k, { dur: 0.05, freq: 1500, q: 1.4, peak: 0.25 * p });
+      });
     },
     /** call on the door tap */
     door() {

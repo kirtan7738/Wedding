@@ -10,7 +10,7 @@ describe('Countdown', () => {
     await act(async () => render(<Countdown now={at('2026-12-12T18:00:00+05:30')} />));
     expect(screen.getByTestId('cd-days').textContent).toBe('૧');
     expect(screen.getByTestId('cd-hours').textContent).toBe('૦૦');
-    expect(screen.getByText('દિવસ')).toBeTruthy();
+    expect(document.querySelector('.cd-cell--days .cd-label').textContent).toBe('દિવસ');
     expect(screen.getByText('સેકન્ડ')).toBeTruthy();
   });
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import wedding from './wedding.js';
+import wedding, { setLang, buildContent, LANGS } from './wedding.js';
 
 describe('wedding content', () => {
   const all = JSON.stringify(wedding);
@@ -53,5 +53,41 @@ describe('wedding content', () => {
     expect((m.loopEnd - m.loopStart) / m.beat).toBeCloseTo(198, 1);
     expect(m.introLoop.every(onGrid)).toBe(true);
     expect(((m.introLoop[1] - m.introLoop[0]) / m.beat) % 3).toBeCloseTo(0, 1); // whole bars
+  });
+});
+
+describe('language (13 Nov): ગુજરાતી and English share every fact, only the words differ', () => {
+  const gu = buildContent('gu');
+  const en = buildContent('en');
+  const shape = (o) => (o && typeof o === 'object' && !Array.isArray(o) ? Object.fromEntries(Object.keys(o).sort().map((k) => [k, shape(o[k])])) : Array.isArray(o) ? o.map(shape) : typeof o);
+
+  it('both languages have exactly the same fields', () => {
+    expect(LANGS).toEqual(['gu', 'en']);
+    expect(shape(en)).toEqual(shape(gu));
+  });
+
+  it('dates, times, links and music are identical; the words are translated', () => {
+    for (const k of ['dateISO', 'countdownTarget']) expect(en[k]).toBe(gu[k]);
+    expect(en.events.map((e) => [e.id, e.start, e.end, e.highlight])).toEqual(gu.events.map((e) => [e.id, e.start, e.end, e.highlight]));
+    expect(en.venue.mapsUrl).toBe(gu.venue.mapsUrl);
+    expect({ ...en.music, label: 0 }).toEqual({ ...gu.music, label: 0 });
+    expect(en.events[0].name).toBe('Hast Melap');
+    expect(en.couple.bride).toBe('Princy');
+    expect(en.copy.minutesLater(30)).toBe('30 minutes later');
+    expect(gu.copy.minutesLater('૩૦')).toBe('૩૦ મિનિટ પછી');
+  });
+
+  it('English has no Gujarati script except deliberate bilingual touches', () => {
+    const allowed = ['langSwitch', 'langSwitchLabel', 'kickers', 'scratchHelper'];
+    const strip = JSON.stringify({ ...en, copy: Object.fromEntries(Object.entries(en.copy).filter(([k]) => !allowed.includes(k))) });
+    expect(strip).not.toMatch(/[઀-૿]/);
+  });
+
+  it('setLang() refills the live object in place, and falls back to Gujarati', () => {
+    const ref = wedding;
+    expect(setLang('en')).toBe('en');
+    expect(ref.coverTitle).toBe('Shubh Lagna');
+    expect(setLang('xx')).toBe('gu');
+    expect(ref.coverTitle).toBe('શુભ લગ્ન');
   });
 });

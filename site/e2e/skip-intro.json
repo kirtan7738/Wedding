@@ -1,1 +1,1 @@
-{ "cookies": [], "origins": [{ "origin": "http://localhost:4173", "localStorage": [{ "name": "kankotri-skip-intro", "value": "1" }] }] }
+{ "cookies": [], "origins": [{ "origin": "http://localhost:4173", "localStorage": [{ "name": "kankotri-skip-intro", "value": "1" }, { "name": "kankotri-lang", "value": "gu" }] }] }

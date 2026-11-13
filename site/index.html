@@ -25,6 +25,13 @@
         if (sessionStorage.getItem('kankotri-opened')) document.documentElement.classList.add('opened');
         // automated tests skip the envelope intro (they exercise it separately)
         if (localStorage.getItem('kankotri-skip-intro')) document.documentElement.classList.add('intro-done');
+        // a language chosen on an earlier visit: no language screen (and English waits for the app, no Gujarati flash)
+        var lang = localStorage.getItem('kankotri-lang');
+        if (lang === 'gu' || lang === 'en') {
+          document.documentElement.classList.add('lang-stored');
+          document.documentElement.lang = lang;
+          if (lang === 'en') document.documentElement.classList.add('lang-en');
+        }
       } catch (e) {}
       // Fail-safe only on a real failure (script load error) or a very late boot — never on a merely slow network.
       var failSafe = function () {
@@ -34,7 +41,9 @@
       setTimeout(failSafe, 15000);
       // A tap on the cover before the app is listening is remembered and replayed once it boots.
       document.addEventListener('click', function (e) {
-        if (!window.__booted && e.target.closest && e.target.closest('.intro')) window.__pendingIntro = true;
+        var langBtn = !window.__booted && e.target.closest && e.target.closest('.lang-gate [data-lang]');
+        if (langBtn) window.__pendingLang = langBtn.getAttribute('data-lang');
+        else if (!window.__booted && e.target.closest && e.target.closest('.intro')) window.__pendingIntro = true;
         else if (!window.__booted && e.target.closest && e.target.closest('.cover')) {
           window.__pendingOpen = true;
           document.documentElement.classList.add('pending-open');

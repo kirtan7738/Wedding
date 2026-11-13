@@ -5,6 +5,8 @@
 @import './cinema.css';
 @import './intro.css';
 @import './sections3.css';
+@import './lang.css';
+@import './sections4.css';
 
 html {
   -webkit-text-size-adjust: 100%;

@@ -20,7 +20,7 @@ export default function Venue() {
 
   return (
     <Reveal id="venue" className="venue scene">
-      <SceneTitle n={5} kicker="The Venue">
+      <SceneTitle n={5} kicker={wedding.copy.kickers.venue}>
         {venue.title}
       </SceneTitle>
       <div className={`ticket ${flipped ? 'is-flipped' : ''}`} data-reveal="tilt">
@@ -38,11 +38,11 @@ export default function Venue() {
           <dl className="ticket-facts">
             <div>
               <dt>{copy.ticketDate}</dt>
-              <dd>{wedding.dateShort.replace(/^.*?તા\.\s*/, '')}</dd>
+              <dd>{wedding.dateNumeric}</dd>
             </div>
             <div>
               <dt>{copy.ticketTime}</dt>
-              <dd>{main.timeText.replace(/\s*કલાકે$/, '')}</dd>
+              <dd>{main.timeShort}</dd>
             </div>
             <div>
               <dt>{copy.ticketTown}</dt>

@@ -1,26 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import wedding from '../content/wedding.js';
+import { useArt } from '../lib/art.js';
 
 export const INTRO_DONE = 'intro-done';
 
 /**
- * First frame (user, 13 Nov): a traditional Gujarati kankotri envelope. One tap and —
- *   the Ganesh seal lifts off, the toran is taken down, the flap folds open,
- *   the kankotri is drawn up out of the envelope, the envelope falls away, the card is presented,
- *   its left panel opens, then its right, and the camera pushes into the painting inside until it
- *   exactly covers the screen — the live gate scene underneath — and the layer dissolves.
+ * First frame (user, 13 Nov: "change the envelope design entirely"): the kankotri arrives in a carved, lacquered
+ * Sankheda box (the lacquered teak woodwork of Sankheda, Gujarat) resting on red bandhani silk. The guest slides the
+ * brass latch (or taps), and —
+ *   the latch flips up, the lid swings back on its hinge (a real CSS 3D box), light glows from the silk inside,
+ *   the kankotri rises out of the box, the box sinks away, the card is presented, its left panel opens, then its
+ *   right, and the camera pushes into the painting inside until it exactly covers the screen — the live gate scene
+ *   underneath — and the layer dissolves.
+ *
+ * The box faces take painted Flow textures (round 9 #47–50) as soon as they exist; lacquer stand-ins until then.
  *
  * Precision notes (user, 13 Nov: "jerking / position issue"):
- *  - no preserve-3d on shared parents: every rotating piece carries its own perspective, so z-index layering
- *    (back → open flap → card → pocket → closed flap → seal → toran) is exact, with the flap swapped edge-on;
- *  - the card is centred on the viewport the whole time; all offsets are measured in px at tap time;
+ *  - the box is one self-contained preserve-3d object; the card is a separate flat layer above it, so layering is exact;
+ *  - the card rises behind a clip that stays on the box's rim, so it truly comes out of the box;
+ *  - the card is presented exactly centred; all offsets are measured in px at tap time;
  *  - the painting inside the card is sized so that at the final zoom it is *exactly* the viewport;
  *  - the scene snapshot is taken ahead of time (idle), never during the animation.
  */
 export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
   const root = useRef(null);
   const [scene, setScene] = useState('/img/shots/cover.webp');
+  const backdropArt = useArt('/img/art/pitara-backdrop.webp');
+  const lidArt = useArt('/img/art/pitara-lid.webp');
+  const frontArt = useArt('/img/art/pitara-front.webp');
+  const swipe = useRef(null);
   const snapped = useRef(false);
   const started = useRef(false);
 
@@ -73,13 +82,19 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
     return null;
   };
 
+  // sliding the latch (a drag in any direction) opens the box; a tap does too
+  const onPointerDown = (e) => (swipe.current = { x: e.clientX, y: e.clientY });
+  const onPointerMove = (e) => {
+    const sw = swipe.current;
+    if (!sw || started.current) return;
+    if (Math.hypot(e.clientX - sw.x, e.clientY - sw.y) > 30) start();
+  };
+
   const start = () => {
     if (started.current) return;
     started.current = true;
     onBegin?.(); // gesture-bound: unlock audio here
     navigator.vibrate?.(12);
-    // not ready yet: the card shows the painted still for now; the live snapshot swaps in as soon as the
-    // painted pieces have loaded (well before the zoom), so the hand-over still lands exactly
     if (worldRef.current) worldRef.current.coverDrift = false;
     // let React paint the snapshot, then run on the next frame
     requestAnimationFrame(() => requestAnimationFrame(play));
@@ -89,7 +104,6 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
     const el = root.current;
     if (!el) return;
     const q = (s) => el.querySelector(s);
-    const qa = (s) => [...el.querySelectorAll(s)];
     const finish = () => {
       document.documentElement.classList.add(INTRO_DONE);
       if (worldRef.current) worldRef.current.coverDrift = true;
@@ -103,41 +117,37 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const card = q('.kk-card');
-    const env = q('.env-back');
+    const box = q('.pitara-stage');
+    const rim = q('.pitara-rim').getBoundingClientRect(); // the box's opening, on screen
     const cw = card.offsetWidth;
     const ch = card.offsetHeight;
-    const ew = env.offsetWidth;
-    const eh = env.offsetHeight;
-    const k0 = Math.min((ew * 0.88) / cw, (eh * 0.9) / ch); // card scale while inside the envelope
+    // the card while it rises: about as wide as the box's opening
+    const k0 = Math.min((rim.width * 0.62) / cw, 1);
     const S = Math.max(vw / cw, vh / ch); // final zoom: the card's painting = the viewport
-    // the painting inside the card: exactly vw×vh at scale S
-    const pic = q('.kk-pic');
-    gsap.set(pic, { width: vw / S, height: vh / S });
+    gsap.set(q('.kk-pic'), { width: vw / S, height: vh / S });
 
-    const envParts = qa('.env-part');
-    const sink = vh * 0.2; // the envelope is lowered while the card is drawn up, so the card stays on screen
-    const cardUp = sink - eh * 0.6;
+    // the card's centre sits at the screen centre (CSS); place it so its top edge starts at the rim, hidden
+    const rimY = rim.top + rim.height * 0.5 - vh / 2; // rim line, relative to the screen centre
+    const startY = rimY + (ch * k0) / 2; // card top on the rim
+    const riseY = startY - ch * k0 * 1.02; // card bottom just clears the rim
 
-    // keep GSAP's lag smoothing on: after a long pause (tab wake, screenshot, slow first frame) the film must
-    // resume where it was — never jump to the end
     const tl = gsap.timeline({ defaults: { force3D: true }, onComplete: finish });
     window.__introTl = tl; // for frame-accurate checks
-    tl.set(card, { scale: k0, y: eh * 0.03 }, 0)
+    tl.set(card, { scale: k0, y: startY, autoAlpha: 1, clipPath: 'inset(0% 0% 100% 0%)' }, 0)
       .to(q('.kk-hint'), { autoAlpha: 0, y: 8, duration: 0.3, ease: 'power1.out' }, 0)
-      // the seal: pressed, then lifted away
-      .to(q('.env-seal'), { scale: 0.92, duration: 0.12, ease: 'power2.out' }, 0)
-      .to(q('.env-seal'), { scale: 0.55, y: -eh * 0.18, rotate: -18, autoAlpha: 0, duration: 0.55, ease: 'power2.in' }, 0.12)
-      // the toran is taken down
-      .to(q('.env-toran'), { y: -eh * 0.08, autoAlpha: 0, duration: 0.5, ease: 'power2.in' }, 0.15)
-      // the flap folds open toward the viewer; it passes edge-on at the half-way point, where it drops behind the card
-      .fromTo(q('.env-flap'), { rotateX: 0, transformPerspective: 900 }, { rotateX: 180, duration: 0.8, ease: 'power2.inOut' }, 0.4)
-      .set(q('.env-flap'), { zIndex: 2 }, 0.8)
-      // the kankotri is drawn up while the envelope is lowered a little
-      .to(envParts, { y: sink, duration: 1.15, ease: 'power2.inOut' }, 1.05)
-      .to(card, { y: cardUp, duration: 1.15, ease: 'power2.inOut' }, 1.05)
-      // the envelope falls away; the card is presented, centred
-      .to(envParts, { y: vh * 1.15, duration: 0.9, ease: 'power2.in' }, 2.2)
-      .to(envParts, { autoAlpha: 0, duration: 0.25, ease: 'none' }, 2.85)
+      .to(box, { '--sway': 0, duration: 0.3 }, 0)
+      // the latch: pressed, then flipped up off its staple
+      .to(q('.pitara-latch'), { scale: 0.92, duration: 0.1, ease: 'power2.out' }, 0)
+      .to(q('.pitara-latch'), { rotateX: -150, y: -6, scale: 1, duration: 0.45, ease: 'power2.inOut' }, 0.1)
+      // the lid swings back on its hinge; light wells up from the silk inside
+      .to(q('.pitara-lid'), { rotateX: 112, duration: 1.25, ease: 'power2.inOut' }, 0.35)
+      .to(q('.pitara-glow'), { opacity: 1, scale: 1.25, duration: 1.0, ease: 'power1.out' }, 0.6)
+      // the kankotri rises out of the box: it climbs while its clip opens at the same pace, so the clip edge stays
+      // on the rim — it comes out of the box, not through it
+      .to(card, { y: riseY, clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power2.inOut' }, 1.1)
+      // the box sinks away; the card is presented, centred
+      .to(box, { y: vh * 0.5, autoAlpha: 0, duration: 1.0, ease: 'power2.in' }, 2.15)
+      .to(q('.pitara-scene'), { autoAlpha: 0.35, duration: 1.0, ease: 'power1.inOut' }, 2.3)
       .to(card, { y: 0, scale: 1, duration: 1.0, ease: 'power3.inOut' }, 2.3)
       // gatefold: left panel, then right panel (overlapping, like a hand opening it)
       .fromTo(q('.kk-flap--l'), { rotateY: 0, transformPerspective: 1500 }, { rotateY: -180, duration: 1.15, ease: 'power2.inOut' }, 3.3)
@@ -149,7 +159,7 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
       .to(q('.kk-flap--r .kk-shade--back'), { opacity: 0, duration: 0.6, ease: 'power1.out' }, 4.2)
       // the push-in: the painting grows until it is exactly the screen
       .to(card, { scale: S, duration: 1.75, ease: 'power2.inOut' }, 4.45)
-      .to(q('.kk-backdrop'), { autoAlpha: 0, duration: 0.9, ease: 'power1.in' }, 5.1)
+      .to([q('.kk-backdrop'), q('.pitara-scene')], { autoAlpha: 0, duration: 0.9, ease: 'power1.in' }, 5.1)
       // hand over to the live scene underneath (same picture, same place)
       .to(el, { autoAlpha: 0, duration: 0.4, ease: 'power1.out' }, 6.2);
   };
@@ -157,12 +167,62 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
   return (
     <div className="intro" ref={root} role="dialog" aria-modal="true" aria-label={wedding.coverTitle}>
       <div className="kk-backdrop" aria-hidden="true" />
-      <button type="button" className="intro-hit" onClick={start} aria-label={`${wedding.copy.introCta} — ${wedding.copy.introHelper}`}>
-        {/* one flat stacking context: every piece is centred on the viewport and layered by z-index */}
-        <span className="env-part env-back" />
-        <span className="env-part env-flap">
-          <span className="env-flap-face env-flap-face--out" />
-          <span className="env-flap-face env-flap-face--in" />
+      <div className={`pitara-scene ${backdropArt ? 'has-art' : ''}`} aria-hidden="true">
+        {backdropArt ? (
+          <img className="pitara-backdrop" src="/img/art/pitara-backdrop.webp" alt="" decoding="async" />
+        ) : (
+          <>
+            <span className="pitara-cloth" />
+            <img className="pitara-prop pitara-prop--diya" src="/img/art/gate/diya.webp" alt="" width="260" height="178" decoding="async" />
+            <img className="pitara-prop pitara-prop--kalash" src="/img/art/gate/kalash.webp" alt="" width="260" height="405" decoding="async" />
+            <span className="pitara-petals">
+              {Array.from({ length: 14 }, (_, i) => (
+                <i key={i} style={{ '--i': i }} />
+              ))}
+            </span>
+          </>
+        )}
+      </div>
+      <button
+        type="button"
+        className="intro-hit"
+        onClick={start}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        aria-label={`${wedding.copy.introCta} — ${wedding.copy.introHelper}`}
+      >
+        {/* the box: one self-contained 3D object */}
+        <span className="pitara-stage">
+          <span className="pitara">
+            <span className="pf pf-front">
+              <span className="pitara-title">{wedding.coverTitle}</span>
+              <span className={`pitara-latch ${frontArt ? 'has-art' : ''}`}>
+                <i />
+              </span>
+            </span>
+            <span className="pf pf-back" />
+            <span className="pf pf-left" />
+            <span className="pf pf-right" />
+            <span className="pf pf-silk">
+              <span className="pitara-glow" />
+            </span>
+            <span className="pitara-rim" />
+            <span className="pitara-lid">
+              <span className={`pf pl-top ${lidArt ? 'has-art' : ''}`}>
+                {!lidArt && (
+                  <span className="pitara-medal">
+                    <img src="/img/art/gate/ganesh-art.webp" alt="" width="300" height="315" decoding="async" />
+                  </span>
+                )}
+              </span>
+              <span className="pf pl-under" />
+              <span className="pf pl-front" />
+              <span className="pf pl-back" />
+              <span className="pf pl-left" />
+              <span className="pf pl-right" />
+            </span>
+          </span>
+          <span className="pitara-shadow" />
         </span>
         <span className="kk-card">
           <span className="kk-inside">
@@ -179,20 +239,6 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
               </span>
             </span>
           ))}
-        </span>
-        <span className="env-part env-pocket">
-          <span className="env-title">
-            <span className="env-kalash" aria-hidden="true" />
-            <span>{wedding.coverTitle}</span>
-            <span className="env-kalash" aria-hidden="true" />
-          </span>
-          <span className="env-invocation">{wedding.invocation}</span>
-        </span>
-        <span className="env-part env-seal" />
-        <span className="env-part env-toran">
-          <img src="/img/art/toran.webp" alt="" width="1600" height="688" />
-          <span className="env-hook env-hook--l" />
-          <span className="env-hook env-hook--r" />
         </span>
         <span className="kk-hint">
           <span className="kk-hint-gu">{wedding.copy.introCta}</span>

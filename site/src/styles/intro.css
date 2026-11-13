@@ -1,17 +1,21 @@
 /* ==================================================================================================
-   Intro: the Gujarati kankotri envelope and the gatefold card (user, 13 Nov).
-   One flat stacking context — every piece is centred on the viewport and layered by z-index:
-     1 envelope back · 2 flap (once open) · 3 card · 4 pocket · 5 flap (closed) · 6 seal · 7 toran
-   Rotating pieces carry their own perspective (GSAP transformPerspective), never preserve-3d on a parent.
+   Intro: the Sankheda kankotri box and the gatefold card (user, 13 Nov: "change the envelope design entirely").
+   The box is one self-contained CSS 3D object (front, back, sides, silk inside, a lid hinged at the back);
+   the card is a separate flat layer above it, centred on the viewport (its rise is placed in JS).
+   Painted textures (round 9 #47–50) sit over lacquer stand-ins: a missing image is simply transparent.
    ================================================================================================== */
 .intro {
   position: fixed;
   inset: 0;
   z-index: 60;
   overflow: hidden;
-  /* envelope */
-  --ew: min(82vw, 50svh);
-  --eh: calc(var(--ew) * 1.45);
+  /* the box: width, height, depth, lid thickness */
+  --bw: min(76vw, 38svh);
+  /* proportions of the painted panels (round 9 #48–50): front 1.79 : 1 split at the lid seam (21 %), lid 1.34 : 1 */
+  --bh: calc(var(--bw) * 0.44);
+  --bd: calc(var(--bw) * 0.746);
+  --lh: calc(var(--bw) * 0.118);
+  --oy: 6svh;
   /* kankotri (portrait, like a real card) */
   --cw: min(72vw, 46svh);
   --ch: calc(var(--cw) / 0.62);
@@ -19,7 +23,7 @@
 html:not(.js) .intro,
 html.opened .intro,
 html.intro-done .intro { display: none; }
-/* the cover's words wait behind the envelope until the zoom has landed */
+/* the cover's words wait behind the intro until the zoom has landed */
 html.js:not(.intro-done) .cover [data-cover-copy] { opacity: 0; }
 .cover [data-cover-copy] { transition: opacity 0.9s ease; }
 
@@ -41,134 +45,272 @@ html.js:not(.intro-done) .cover [data-cover-copy] { opacity: 0; }
   cursor: pointer;
   font: inherit;
   color: inherit;
+  touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
 .intro-hit > span { display: block; }
 
-/* ---- shared centring */
-.env-part, .kk-card {
+/* ---- the setting: red bandhani silk on ivory marble (the painted backdrop, #47, replaces it) */
+.pitara-scene { position: absolute; inset: 0; pointer-events: none; }
+.pitara-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pitara-scene:not(.has-art) {
+  background:
+    radial-gradient(120% 90% at 30% 20%, rgb(255 255 255 / 0.55), transparent 60%),
+    repeating-linear-gradient(115deg, rgb(200 180 150 / 0.08) 0 2px, transparent 2px 46px),
+    linear-gradient(160deg, #fbf6ec, #efe3cf);
+}
+.pitara-cloth {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--oy));
+  width: min(118vw, 64svh);
+  aspect-ratio: 1.15;
+  translate: -50% -46%;
+  rotate: -7deg;
+  border-radius: 6% 10% 8% 12% / 10% 8% 12% 6%;
+  background:
+    linear-gradient(115deg, rgb(255 255 255 / 0) 30%, rgb(255 220 210 / 0.18) 45%, rgb(0 0 0 / 0.12) 60%, rgb(255 255 255 / 0) 75%),
+    radial-gradient(70% 60% at 50% 50%, transparent 55%, rgb(60 0 6 / 0.25)),
+    url('/img/art/env-paper.webp') center / 60% auto,
+    #a3192a;
+  box-shadow: 0 30px 60px rgb(90 20 10 / 0.25), 0 6px 14px rgb(90 20 10 / 0.2);
+}
+.pitara-prop { position: absolute; height: auto; filter: drop-shadow(0 8px 10px rgb(90 40 10 / 0.25)); }
+.pitara-prop--diya { left: 4%; bottom: 9%; width: min(30vw, 15svh); }
+.pitara-prop--kalash { right: 5%; top: 7%; width: min(20vw, 11svh); }
+.pitara-petals i {
+  position: absolute;
+  left: calc(8% + (var(--i) * 37 % 84) * 1%);
+  top: calc(12% + (var(--i) * 53 % 76) * 1%);
+  width: 10px;
+  height: 14px;
+  border-radius: 60% 60% 50% 50% / 70% 70% 40% 40%;
+  rotate: calc(var(--i) * 47deg);
+  background: linear-gradient(160deg, #ffc23d, #e8681a);
+  box-shadow: 0 2px 2px rgb(90 30 0 / 0.2);
+}
+.pitara-petals i:nth-child(3n) { background: linear-gradient(160deg, #f04a4a, #a3192a); }
+.pitara-petals i:nth-child(4n) { width: 8px; height: 11px; }
+
+/* ---- the box (one 3D object) */
+.pitara-stage {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--oy));
+  width: 0;
+  height: 0;
+  perspective: 1200px;
+  perspective-origin: 50% -60%;
+  --sway: 1;
+}
+.pitara {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(calc(var(--sway) * -8deg));
+  animation: pitara-float 6s ease-in-out infinite;
+}
+@keyframes pitara-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6px; }
+}
+.pf {
+  position: absolute;
+  left: 0;
+  top: 0;
+  backface-visibility: visible;
+}
+/* Sankheda lacquer stand-in: deep maroon, gold and green painted bands, gold pinstripes, brass corners.
+   Each face lays its painted texture (url first) over it; a missing file is simply transparent. */
+.intro {
+  --lacquer:
+    linear-gradient(135deg, #f1d37f 0 7px, #a8751f 7px 8.5px, transparent 8.5px),
+    linear-gradient(225deg, #f1d37f 0 7px, #a8751f 7px 8.5px, transparent 8.5px),
+    linear-gradient(45deg, #f1d37f 0 7px, #a8751f 7px 8.5px, transparent 8.5px),
+    linear-gradient(315deg, #f1d37f 0 7px, #a8751f 7px 8.5px, transparent 8.5px),
+    linear-gradient(#d9a443, #d9a443) 0 14% / 100% 2px no-repeat,
+    linear-gradient(#d9a443, #d9a443) 0 86% / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, #2f6b3a 0 6px, #d9a443 6px 8px, #b81f2c 8px 14px, #d9a443 14px 16px) 0 4% / 100% 6% no-repeat,
+    repeating-linear-gradient(90deg, #2f6b3a 0 6px, #d9a443 6px 8px, #b81f2c 8px 14px, #d9a443 14px 16px) 0 96% / 100% 6% no-repeat,
+    linear-gradient(100deg, rgb(255 255 255 / 0) 25%, rgb(255 220 200 / 0.22) 40%, rgb(255 255 255 / 0) 55%),
+    linear-gradient(180deg, #7a1020, #5e0b18 60%, #3d0710);
+}
+.pf-front, .pf-back { background: url('/img/art/pitara-front.webp') center / 100% 100% no-repeat, var(--lacquer); }
+.pf-left, .pf-right { background: url('/img/art/pitara-side.webp') center / 100% 100% no-repeat, var(--lacquer); }
+.pl-front, .pl-back { background: url('/img/art/pitara-front-lid.webp') center / 100% 100% no-repeat, var(--lacquer); }
+.pl-left, .pl-right { background: url('/img/art/pitara-side-lid.webp') center / 100% 100% no-repeat, var(--lacquer); }
+.pf-front, .pf-back, .pf-left, .pf-right, .pl-front, .pl-back, .pl-left, .pl-right, .pl-top { box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.35); }
+/* shading: the sides a touch darker than the front, the lid top lit */
+.pf-left, .pf-right, .pl-left, .pl-right { filter: brightness(0.82); }
+/* the body */
+.pf-front, .pf-back { width: var(--bw); height: var(--bh); margin: calc(var(--bh) / -2) 0 0 calc(var(--bw) / -2); }
+.pf-left, .pf-right { width: var(--bd); height: var(--bh); margin: calc(var(--bh) / -2) 0 0 calc(var(--bd) / -2); }
+.pf-front { transform: translateZ(calc(var(--bd) / 2)); }
+.pf-back { transform: rotateY(180deg) translateZ(calc(var(--bd) / 2)); }
+.pf-left { transform: rotateY(-90deg) translateZ(calc(var(--bw) / 2)); }
+.pf-right { transform: rotateY(90deg) translateZ(calc(var(--bw) / 2)); }
+/* the silk cushion inside, just below the rim, facing up */
+.pf-silk {
+  width: calc(var(--bw) - 6px);
+  height: calc(var(--bd) - 6px);
+  margin: calc(var(--bd) / -2 + 3px) 0 0 calc(var(--bw) / -2 + 3px);
+  transform: rotateX(90deg) translateZ(calc(var(--bh) / 2 - 4px));
+  overflow: hidden;
+  background:
+    radial-gradient(60% 60% at 50% 50%, rgb(255 210 160 / 0.25), transparent 70%),
+    radial-gradient(circle, rgb(233 196 106 / 0.45) 0 1.5px, transparent 2px) 0 0 / 16px 16px,
+    linear-gradient(135deg, #c42a35, #8f1424 55%, #6a0d1a);
+  box-shadow: inset 0 0 18px rgb(40 0 4 / 0.6);
+}
+.pitara-glow {
+  position: absolute;
+  inset: -20%;
+  opacity: 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 236 180 / 0.95), rgb(255 200 110 / 0.5) 45%, transparent 75%);
+}
+/* an invisible plane on the rim: its on-screen box tells the card where to rise from */
+.pitara-rim {
+  position: absolute;
+  width: var(--bw);
+  height: var(--bd);
+  margin: calc(var(--bd) / -2) 0 0 calc(var(--bw) / -2);
+  transform: rotateX(90deg) translateZ(calc(var(--bh) / 2));
+  pointer-events: none;
+}
+/* the lid: a group hinged on the box's back top edge */
+.pitara-lid {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  transform-origin: 0 calc(var(--bh) / -2) calc(var(--bd) / -2);
+}
+.pl-top, .pl-under { width: var(--bw); height: var(--bd); margin: calc(var(--bd) / -2) 0 0 calc(var(--bw) / -2); }
+.pl-top {
+  transform: rotateX(90deg) translateZ(calc(var(--bh) / 2 + var(--lh)));
+  background: url('/img/art/pitara-lid.webp') center / 100% 100% no-repeat, var(--lacquer);
+  display: grid !important;
+  place-items: center;
+}
+.pl-under {
+  transform: rotateX(90deg) translateZ(calc(var(--bh) / 2 + 1px));
+  background:
+    radial-gradient(circle, rgb(233 196 106 / 0.4) 0 1.5px, transparent 2px) 0 0 / 16px 16px,
+    linear-gradient(135deg, #b81f2c, #7a1020);
+  box-shadow: inset 0 0 0 4px #d9a443;
+}
+.pl-front, .pl-back { width: var(--bw); height: var(--lh); margin: calc(var(--lh) / -2) 0 0 calc(var(--bw) / -2); }
+.pl-left, .pl-right { width: var(--bd); height: var(--lh); margin: calc(var(--lh) / -2) 0 0 calc(var(--bd) / -2); }
+.pl-front { transform: translateY(calc(var(--bh) / -2 - var(--lh) / 2)) translateZ(calc(var(--bd) / 2)); }
+.pl-back { transform: translateY(calc(var(--bh) / -2 - var(--lh) / 2)) rotateY(180deg) translateZ(calc(var(--bd) / 2)); }
+.pl-left { transform: translateY(calc(var(--bh) / -2 - var(--lh) / 2)) rotateY(-90deg) translateZ(calc(var(--bw) / 2)); }
+.pl-right { transform: translateY(calc(var(--bh) / -2 - var(--lh) / 2)) rotateY(90deg) translateZ(calc(var(--bw) / 2)); }
+/* the Ganesh medallion on the lid (stand-in until the painted lid, #49, exists) */
+.pitara-medal {
+  display: block;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px #e9c46a, 0 0 0 6px #5e0b18, 0 0 0 8px #d9a443;
+}
+.pitara-medal img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pl-top.has-art .pitara-medal { display: none; }
+
+/* the gold Gujarati title painted on the front, and the brass latch at its top centre */
+.pitara-title {
+  position: absolute;
+  inset: 44% 0 auto;
+  text-align: center;
+  font-family: var(--font-gu-display);
+  font-weight: 700;
+  font-size: calc(var(--bw) * 0.09);
+  line-height: 1.6;
+  background: linear-gradient(180deg, #fff3cc, #f3d27e 40%, #c9952f 70%, #f1d37f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 1px rgb(30 0 4 / 0.7));
+}
+.pitara-latch {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: calc(var(--lh) * -0.9);
+  width: max(26px, calc(var(--bw) * 0.13));
+  height: max(36px, calc(var(--bw) * 0.19));
+  margin-left: calc(max(26px, calc(var(--bw) * 0.13)) / -2);
+  transform-origin: 50% 0;
+  border-radius: 6px 6px 40% 40%;
+  background: radial-gradient(circle at 40% 25%, #fff3c9, #e9c46a 40%, #a8751f 85%);
+  box-shadow: 0 0 0 2px rgb(255 240 190 / 0.5), 0 4px 6px rgb(40 10 0 / 0.5), inset 0 0 0 1.5px rgb(110 70 15 / 0.6);
+  animation: latch-hint 2.4s ease-in-out infinite;
+}
+.pitara-latch i {
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: 34%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  border: 2px solid #7a4c12;
+}
+@keyframes latch-hint {
+  0%, 70%, 100% { rotate: 0deg; }
+  78% { rotate: -6deg; }
+  86% { rotate: 5deg; }
+  94% { rotate: -2deg; }
+}
+.pitara-shadow {
+  position: absolute;
+  left: 0;
+  top: calc(var(--bh) * 0.62);
+  width: calc(var(--bw) * 1.15);
+  height: calc(var(--bd) * 0.5);
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(40 0 4 / 0.45), transparent);
+  filter: blur(6px);
+}
+
+/* the card waits unseen; the timeline shows it at the rim and lifts it out of the box */
+.kk-card {
   position: absolute;
   left: 50%;
   top: 50%;
   will-change: transform;
 }
-.env-back, .env-pocket, .env-toran {
-  width: var(--ew);
-  height: var(--eh);
-  margin: calc(var(--eh) / -2) 0 0 calc(var(--ew) / -2);
-}
 
-/* ---- envelope */
-.env-back {
-  z-index: 1;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #4e0913, #6a0d1a);
-  box-shadow: 0 30px 60px rgb(90 20 10 / 0.35), 0 8px 18px rgb(90 20 10 / 0.25);
+@media (prefers-reduced-motion: reduce) {
+  .pitara, .pitara-latch { animation: none; }
 }
-.env-pocket {
-  z-index: 4;
-  border-radius: 6px;
-  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M3 4 L50 54 L97 4 M3 4 V96 H97 V4' fill='none' stroke='%23e9c46a' stroke-width='0.6'/%3E%3Cpath d='M6 9 L50 58 L94 9 M6 9 V93 H94 V9' fill='none' stroke='%23e9c46a' stroke-width='0.3' stroke-dasharray='1 1.2'/%3E%3C/svg%3E") center / 100% 100%,
-    url('/img/art/env-paper.webp') center / cover,
-    #8f1424;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 9%;
+/* the painted front has its own engraved brass hasp: the latch becomes a soft glow over it, inviting the tap */
+.pitara-latch.has-art {
+  top: calc(var(--lh) * -1);
+  width: calc(var(--bw) * 0.15);
+  height: calc(var(--bh) * 0.62 + var(--lh));
+  margin-left: calc(var(--bw) * -0.075);
+  border-radius: 40%;
+  background: radial-gradient(closest-side, rgb(255 230 150 / 0.55), rgb(255 200 90 / 0) 80%);
+  box-shadow: none;
+  animation: hasp-glow 2.4s ease-in-out infinite;
 }
-.env-flap {
-  z-index: 5;
-  width: var(--ew);
-  height: calc(var(--eh) * 0.62);
-  margin: calc(var(--eh) / -2) 0 0 calc(var(--ew) / -2);
-  transform-origin: 50% 0;
-  transform-style: preserve-3d; /* its own two faces only */
+.pitara-latch.has-art i { display: none; }
+@keyframes hasp-glow { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.9; } }
+
+/* wide screens: a little smaller, a little higher */
+@media (min-aspect-ratio: 1/1) {
+  .intro { --bw: min(40vw, 42svh); --oy: 4svh; }
 }
-.env-flap-face {
-  position: absolute;
-  inset: 0;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.env-flap-face--out {
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M4 3 L50 94 L96 3' fill='none' stroke='%23e9c46a' stroke-width='0.7'/%3E%3C/svg%3E") center / 100% 100%,
-    linear-gradient(180deg, rgb(255 220 200 / 0.1), rgb(0 0 0 / 0.18)),
-    url('/img/art/env-paper.webp') center top / cover,
-    #a3192a;
-}
-/* the flap's inner lining (seen once it is folded open): ivory with a fine gold edge */
-.env-flap-face--in {
-  transform: rotateX(180deg);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M4 3 L50 94 L96 3' fill='none' stroke='%23c99a3b' stroke-width='0.8'/%3E%3C/svg%3E") center / 100% 100%,
-    linear-gradient(180deg, #e9d3a6, #dcc08a);
-}
-.env-seal {
-  z-index: 6;
-  width: calc(var(--ew) * 0.3);
-  height: calc(var(--ew) * 0.3);
-  /* centred on the flap's tip */
-  margin: calc(var(--eh) * 0.12 - var(--ew) * 0.15) 0 0 calc(var(--ew) * -0.15);
-  background: url('/img/art/env-seal.webp') center / contain no-repeat;
-  filter: drop-shadow(0 6px 8px rgb(60 10 0 / 0.45));
-}
-.env-title {
-  display: flex !important;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-gu-display);
-  font-weight: 700;
-  font-size: calc(var(--ew) * 0.1);
-  line-height: 1.1;
-  background: linear-gradient(180deg, #fff3cc, #f3d27e 40%, #c9952f 70%, #f1d37f);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 2px 2px rgb(40 0 6 / 0.55));
-}
-.env-invocation { margin-top: 0.25rem; font-family: var(--font-gu-serif); font-size: calc(var(--ew) * 0.034); color: #f3d58a; opacity: 0.9; }
-.env-kalash {
-  display: block;
-  width: 1.1em;
-  height: 1.1em;
-  flex: none;
-  background: url('/img/art/kalash.webp') center / contain no-repeat;
-  filter: sepia(1) saturate(2.2) hue-rotate(-12deg) brightness(1.05);
-}
-.env-toran {
-  z-index: 7;
-  pointer-events: none;
-  height: auto;
-  filter: drop-shadow(0 3px 3px rgb(60 10 0 / 0.3));
-}
-.env-toran img {
-  display: block;
-  width: 94%;
-  margin: 0.4% auto 0;
-  height: auto;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 3.5%, #000 96.5%, transparent 100%);
-}
-.env-hook {
-  position: absolute;
-  top: 2%;
-  width: calc(var(--ew) * 0.055);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  translate: -50% -50%;
-  background: radial-gradient(circle at 35% 30%, #fff3c9 0%, #e9c46a 35%, #a8751f 75%, #6a4510 100%);
-  box-shadow: 0 2px 3px rgb(50 20 0 / 0.45), inset 0 0 0 2px rgb(120 80 20 / 0.35);
-}
-.env-hook--l { left: 6%; }
-.env-hook--r { left: 94%; }
 
 /* ---- the kankotri (gatefold) */
+/* the card waits unseen inside the (now smaller) envelope; the timeline shows it at the envelope's scale on the tap */
 .kk-card {
+  visibility: hidden;
+  opacity: 0;
   z-index: 3;
   width: var(--cw);
   height: var(--ch);
@@ -208,12 +350,14 @@ html.js:not(.intro-done) .cover [data-cover-copy] { opacity: 0; }
 .kk-face--back { transform: rotateY(180deg); background: url('/img/art/card-panel-inside.webp') center / cover no-repeat, #fbf3e4; }
 .kk-shade { position: absolute; inset: 0; pointer-events: none; background: #3a1206; opacity: 0; }
 .kk-shade--back { opacity: 0.3; }
-.kk-cover { position: absolute; top: 0; bottom: 0; width: 200%; background: url('/img/art/card-cover.webp') center / 100% 100% no-repeat, #fbf3e4; }
+/* the haveli kankotri cover (round 9 #51) sits over the earlier one once it exists */
+.kk-cover { position: absolute; top: 0; bottom: 0; width: 200%; background: url('/img/art/card-cover-haveli.webp') center / 100% 100% no-repeat, url('/img/art/card-cover.webp') center / 100% 100% no-repeat, #fbf3e4; }
 .kk-cover--l { left: 0; }
 .kk-cover--r { left: -100%; }
 .kk-cover-inner {
   position: absolute;
-  inset: 26% 18% 24%;
+  /* the clear ivory between Ganesh under the toran and the little haveli door (card-cover-haveli, #51) */
+  inset: 27% 16% 40%;
   display: flex !important;
   flex-direction: column;
   align-items: center;
@@ -273,3 +417,4 @@ html.js:not(.intro-done) .cover [data-cover-copy] { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .kk-hint { animation: none; }
 }
+

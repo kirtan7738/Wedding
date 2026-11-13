@@ -374,3 +374,210 @@ Use the same two prompts, but replace the "Subject" figures with: *"a celestial 
 
 ## Fallback C — Brahma, Vishnu and Mahesh with their consorts
 Three images instead of two: `devta-left` = Brahma and Saraswati, `devta-centre` = Vishnu and Lakshmi (facing the viewer, smaller, high in the sky), `devta-right` = Shiva and Parvati. Same prompt style, each scattering petals toward the centre. Crowded on phones; best on desktop.
+
+---
+
+# Round 9 — the redesign (haveli gate, mandir envelope, new sections)
+
+Plan: `docs/redesign-plan.md`.
+
+**Settings:** same as before.
+- Model: **Nano Banana Pro**.
+- Attach **`peacock`** (the style master) as a reference to **every** prompt.
+- Download each image as PNG, drop it in `C:\Users\OMEN\Desktop\wed\` and say **"check"**. Claude cuts it out and slots it in.
+
+**Order:** gate (41–46) → the kankotri box (47–51) → sections (52–60). Each group works as soon as its pieces arrive. Claude builds the code with placeholders in the meantime.
+
+## Gate — a Gujarati pol-haveli doorway (replaces the white doors)
+
+### 41 · `haveli-door-leaf.png` — aspect **9:16** — count **x2** — **most important**
+One door leaf. It is mirrored for the other side, and the two swing open in 3D.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting with Gujarati haveli detail — exquisite fine detail, gouache texture, delicate gold-leaf outlines, soft warm even daylight from the upper left. Subject: ONE tall single leaf of a traditional Gujarati pol-haveli wooden door, seen perfectly straight-on and flat (no perspective, no angle), shaped as a tall rectangle: rich dark teak wood with deep hand-carved panels of lotus, parrots and creeper vines, rows of polished round brass studs, a brass corner plate at each corner, a large painted kumkum-red sathiya (swastik) with four dots in the upper panel, and a small brass ring knocker on the right edge at mid height. The leaf fills the frame from top to bottom and edge to edge with nothing around it. Background (only if any gap remains): perfectly flat, solid, uniform pure magenta (#FF00FF) — no frame, no wall, no shadow, no text.
+```
+
+### 42 · `haveli-doorway.png` — aspect **9:16** — count **x2** — **most important**
+The house front the doors sit in. The door opening must be pure magenta so the 3D doors show through it. **Updated (13 Nov):** the door must look tall and grand. The opening is a TALL rectangle (about 46% of the width × 50% of the height, width : height ≈ 0.52), exactly the proportions of the painted teak door (#41), so the whole door shows and nothing is cut or stretched. The two stone elephants and the jharokhas stay as in the first version.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting — exquisite fine detail, gouache texture, gold-leaf outlines, soft warm daylight from the upper left, warm ivory, ochre, teak brown, kumkum red and gold. Subject: the front of a traditional two-storey Gujarati pol haveli seen perfectly straight-on and symmetrical: a carved wooden entrance frame with a cusped arch top and carved brackets, two carved stone elephants with raised trunks at the base of the frame, a carved Ganesha plaque on the lintel above the doorway, and above it an upper storey with three carved wooden jharokha balconies with lattice screens and small canopies, a sloping tiled eave on top. The DOORWAY OPENING must be TALL and GRAND, the main feature of the facade: a tall rectangle about 46% of the image width and 50% of the image height, centred left-to-right, its bottom touching the bottom edge of the image, with only a slim carved teak frame around it and the cusped arch and Ganesha plaque directly above its top edge (no plaster recess between the door and the arch) — a pair of tall teak doors fills it later must be filled completely with perfectly flat, solid, uniform pure magenta (#FF00FF), as must everything around the building — no sky, no street, no ground, no shadow, no doors, no frame, no text. Crisp clean edges against the magenta.
+```
+
+### 43 · `door-toran.png` — aspect **16:9** — count **x1**
+Hangs across the top of the doorway and sways.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: a traditional Gujarati door toran seen straight-on: a horizontal band of red-and-gold embroidered cloth with tiny mirror work at the top, from which hang a dense row of fresh orange and yellow marigold strings alternating with glossy green mango leaves, with three small brass bells at the centre and both ends. Wide and symmetrical, the whole toran inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no wall, no shadow, no frame, no text.
+```
+
+### 44 · `haveli-threshold.png` — aspect **16:9** — count **x1**
+The steps in front of the door, seen from slightly above.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: three wide, shallow, warm ivory stone steps leading up to a doorway, seen from the front and slightly above, symmetrical; a colourful round Gujarati rangoli of lotus and peacock motifs in red, yellow, green and white on the ground in front of the lowest step, a pair of small kumkum footprints (kanku pagla) on the top step, small brass diyas with lit flames along the edges of each step, and marigold petals scattered. The whole set of steps inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) everywhere above and around the steps — no wall, no door, no sky, no shadow, no frame, no text.
+```
+
+### 45 · `samai-pair.png` — aspect **3:4** — count **x1**
+A tall brass lamp standing beside the door. One image, mirrored for the other side.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: ONE tall traditional brass standing oil lamp (samai / deepstambh), polished gold-brass with a peacock finial on top and three tiers of small lit oil-wick flames with a soft warm glow, a round stepped base with a small marigold garland around it. Seen straight from the front, whole lamp inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no floor, no frame, no text.
+```
+
+### 46 · `door-kadi.png` — aspect **1:1** — count **x1**
+The brass knocker the guest taps ("દ્વાર ખોલો").
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one ornate antique brass door knocker seen straight from the front: a round brass back plate shaped like a lotus, a lion face (simha) holding a heavy brass ring in its mouth, polished highlights and slight aged patina. Centred, the whole knocker inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no door, no wood, no shadow, no frame, no text.
+```
+
+## First screen — the Sankheda kankotri box (replaces the envelope, user 13 Nov)
+
+The kankotri arrives in a carved, lacquered **Sankheda** box (the traditional lacquered teak woodwork of Sankheda, Gujarat): the guest slides the brass latch, the lid swings back on its hinge, light glows from inside, and the kankotri rises out on red silk. The box is a real 3D box built in code, so these are **flat, straight-on textures** for its faces. That makes them easy to keep consistent: attach the peacock style master, and for #48–50 also attach the image chosen for #48, so the lacquer, colours and pattern match.
+
+### 47 · `pitara-backdrop.png` — aspect **9:16** — count **x2** — **most important**
+The very first screen behind the box. **Full-bleed, no magenta.**
+```
+A full-frame painted scene filling the entire image edge to edge, for the first screen of a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly (Mughal / Rajasthani miniature, fine detail, gouache texture, gold-leaf outlines). Seen from above at a gentle angle: a deep kumkum-red bandhani silk cloth with tiny white and gold dots spread softly over a warm ivory marble floor; scattered orange and yellow marigold petals and a few red rose petals; a small lit brass diya at the lower left and a small brass kalash with mango leaves at the upper right, both near the edges; soft warm daylight from the upper left. The CENTRE of the image (the middle 60% of the width and 50% of the height) is plain red silk, EMPTY, with gentle folds only (a box is placed there later). No people, no text, no border.
+```
+
+### 48 · `pitara-front.png` — aspect **16:9** — count **x2** — **most important**
+The front face of the box (also used, mirrored, for the back).
+```
+A flat, full-frame texture filling the entire image edge to edge, seen perfectly straight-on with no perspective: the front panel of a traditional Gujarati Sankheda lacquered teak box, in the painting style of the reference image. Glossy deep maroon-red lacquer, with hand-painted gold and green floral bands along the top and bottom edges, a row of small painted lotus and paisley motifs, thin gold pinstripes, polished brass corner plates at all four corners, and in the exact centre of the top edge an ornate brass latch plate (hasp) with a small loop. Symmetrical left-to-right. The panel fills the whole image; no background, no shadow, no text.
+```
+
+### 49 · `pitara-lid.png` — aspect **4:3** — count **x2** — **most important**
+The top of the lid, seen straight down. **Attach #48 as a reference too.**
+```
+A flat, full-frame texture filling the entire image edge to edge, seen perfectly straight down with no perspective: the top of the lid of the same Gujarati Sankheda lacquered teak box as the reference, glossy deep maroon-red lacquer with a broad hand-painted gold and green floral border, polished brass corner plates, and in the centre a round painted medallion of Lord Ganesha seated on a lotus inside a ring of small marigolds and gold leaf. Symmetrical. The lid fills the whole image; no background, no shadow, no text.
+```
+
+### 50 · `pitara-side.png` — aspect **4:3** — count **x1**
+The two short sides of the box. **Attach #48 as a reference too.**
+```
+A flat, full-frame texture filling the entire image edge to edge, seen perfectly straight-on with no perspective: the short side panel of the same Gujarati Sankheda lacquered teak box as the reference, glossy deep maroon-red lacquer with a painted gold and green floral band along the top and bottom edges, a single painted lotus in the centre, and a small brass ring handle above it. The panel fills the whole image; no background, no shadow, no text.
+```
+
+### 51 · `card-cover-haveli.png` — aspect **9:16** — count **x2**
+The kankotri itself, the front cover seen when it rises out of the box. It is split down the middle when its two panels open.
+```
+A flat, full-frame painted front cover for a traditional Gujarati wedding kankotri, filling the entire image edge to edge, and match the painting style of the reference image exactly (Mughal / Rajasthani miniature, gold-leaf outlines): warm ivory handmade paper, a rich border of kumkum red and gold with marigold, mango-leaf and paisley motifs; at the top centre a small painted Lord Ganesha under a tiny marigold toran; at the bottom a small painted carved haveli doorway with closed teak doors, a kalash on each side and a row of tiny diyas. The MIDDLE THIRD of the card must stay plain ivory paper with NO text and NO pattern (the Gujarati title is added later). Symmetrical left-to-right. No text anywhere.
+```
+
+*(The earlier mandir-niche, puja-thali, painted envelope and mauli-knot prompts were replaced by the box. Skip them.)*
+
+## Sections
+
+### 52 · `jharokha-frame.png` — aspect **3:4** — count **x2**
+Section 2 (હરખનું તેડું). A carved window. Its opening must be magenta, because the invitation text sits inside it.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one ornate Rajasthani-Gujarati jharokha window seen perfectly straight-on and symmetrical: carved warm ivory sandstone frame with a cusped arch top, a small domed canopy above with tiny finials, carved brackets below, delicate jaali borders, small painted marigold garland hanging across the arch. The window OPENING (a tall arched area in the middle, about 60% of the image width and 65% of its height) must be filled with perfectly flat, solid, uniform pure magenta (#FF00FF), as must everything around the window — no wall, no shutters, no shadow, no frame, no text.
+```
+
+### 53 · `jharokha-shutter.png` — aspect **9:16** — count **x1**
+One wooden shutter of that window. It is mirrored for the pair, and they swing open on scroll.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: ONE tall narrow wooden window shutter seen perfectly straight-on and flat, with an arched top on the RIGHT side only (the left half of a cusped arch): teak wood painted with a red-and-gold floral pattern, a carved lattice (jaali) panel in the upper half, a small parrot painted in the lower panel, and a tiny brass handle at the right edge. The shutter fills the frame. Background (only where the arch leaves a gap): perfectly flat, solid, uniform pure magenta (#FF00FF) — no frame, no wall, no shadow, no text.
+```
+
+### 54 · `bride-portrait.png` — aspect **3:4** — count **x2**
+Section 3. A traditional miniature portrait, not a likeness, in profile as in classic miniatures.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: a classic Rajasthani-Gujarati miniature portrait of a young Gujarati bride in elegant side profile facing RIGHT, waist-up: red-and-white panetar saree with a gold border, the veil over her head, a gold nath (nose ring), maang tikka, layered gold necklaces, bangles, holding a small lotus flower; serene, graceful, idealised (not a real person). Placed inside a painted oval medallion with a fine gold border and a ring of tiny flowers. The whole medallion inside the frame, centred. Background outside the medallion: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no text.
+```
+
+### 55 · `groom-portrait.png` — aspect **3:4** — count **x2**
+The pair to #54. **Attach #54 as a second reference** so the medallion matches.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style and the medallion of the reference images exactly. Subject: a classic Rajasthani-Gujarati miniature portrait of a young Gujarati groom in elegant side profile facing LEFT, waist-up: ivory sherwani with gold embroidery, a red safa turban with a jewelled kalgi (plume) and a string of pearls, a marigold-and-rose garland, holding a small sword hilt; serene, idealised (not a real person). Inside the same painted oval medallion with a fine gold border and a ring of tiny flowers. The whole medallion inside the frame, centred. Background outside the medallion: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no text.
+```
+
+### 56 · `arch-name-frame.png` — aspect **3:4** — count **x1**
+Section 3. The frame around each family list (દર્શનાભિલાષી, સ્નેહાધીન, મામેરું).
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: an empty decorative painted frame shaped like a cusped Mughal arch seen straight-on: a slim border of kumkum red and gold with tiny marigolds and green leaves, a small kalash motif at the top point and two tiny peacocks at the bottom corners. The INSIDE of the frame (most of the image) must be plain warm ivory paper, empty, for text added later. Everything OUTSIDE the arch: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no text.
+```
+
+### 57 · `silk-scroll.png` — aspect **9:16** — count **x2**
+Section 5. Each event (હસ્ત મેળાપ, ભોજન) hangs as one of these and unrolls.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one hanging silk scroll banner seen straight-on: an ornate gold rod across the top with round finials at both ends and a red cord loop for hanging; rich deep kumkum-red silk with a woven gold border and small gold buti motifs; a matching gold rod at the bottom; two thick gold-and-red tassels hanging from the lower rod's ends. The CENTRE of the silk (about 70% of its area) must be plain red silk with a faint sheen and NO pattern (text and art are placed there later). Symmetrical, the whole scroll inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no wall, no shadow, no text.
+```
+
+### 58 · `mandala-corner.png` — aspect **1:1** — count **x1**
+The slowly turning mandala that peeks in at the page corners. Pale, so text stays readable over it.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one large round traditional mandala seen straight-on, finely detailed in a soft pale palette — ivory, blush, pale gold and muted teal — with concentric rings of lotus petals, paisleys and tiny peacock-feather eyes, a small lotus at the centre; delicate and airy, low contrast. Perfectly round and centred, the whole mandala inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no text.
+```
+
+### 59 · `elephant-divider.png` — aspect **16:9** — count **x1**
+The ornament between sections.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: a small symmetrical ornament: two small decorated Indian elephants facing each other with raised trunks, red-and-gold caparisons, holding a marigold garland between their trunks, a small kalash with mango leaves standing in the middle. Wide and short, symmetrical, the whole ornament inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no ground, no shadow, no frame, no text.
+```
+
+### 60 · `farewell-scene.png` — aspect **9:16** — count **x2** — optional
+The backdrop for Section 9. **Full-bleed, no magenta.**
+```
+A full-frame painted scene filling the entire image edge to edge, and match the painting style of the reference image exactly (Mughal / Rajasthani miniature, fine detail, gold-leaf outlines). Subject: a Gujarati haveli courtyard at golden dusk after a wedding: strings of marigolds and small lanterns across the courtyard, rows of lit diyas along the edges, a decorated swing (hindolo) with flowers in the background, rose petals on the floor, a soft warm glow and a pale evening sky with the first stars above. The UPPER HALF should be calm (sky and lanterns) for text placed over it. No people, no text, no border.
+```
+
+**Reused, no new image needed:**
+- `elephant` slides down the event thread.
+- `couple-havan` and `thali` go inside the silk scrolls.
+- `ganesh-art` sits in the jharokha.
+- `venue-illustration` stays on the ticket.
+- `pheras` stays in સાત ફેરા.
+- `env-seal` cracks in code.
+
+---
+
+# Round 10 — the hero: inside the haveli chowk (user, 13 Nov: "the entire hero section needs to change completely")
+
+The guest opens the haveli doors and steps into the haveli courtyard (chowk), where the wedding is happening:
+- painted haveli walls with jharokhas all round;
+- the Gujarati wedding **chori** in the centre, with the couple at the havan under it;
+- a tulsi kyaro, torans and garlands strung across the courtyard, and a rangoli floor;
+- Shiv-Parvati and Lakshmi-Narayan showering petals from the sky above, as before.
+
+Same settings: Nano Banana Pro, attach **peacock** (the style master) to every prompt, and download PNGs into the `wed` folder.
+
+**Reused, no new image needed:** couple-havan, devta-left and devta-right, clouds, kalash, diya, plantain (beside the chori), peacock (on the parapet), and the samai lamp (#45).
+
+### 61 · `chowk-backwall.png` — aspect **16:9** — count **x2** — **most important**
+The far side of the courtyard, behind the chori.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting with Gujarati haveli detail — exquisite fine detail, gouache texture, gold-leaf outlines, soft warm golden-hour light from the left. Subject: the inner back wall of a traditional two-storey Gujarati haveli courtyard, seen perfectly straight-on and symmetrical, filling the full width: on the ground floor three carved teak arched doorways with marigold-and-mango-leaf torans, and between them painted murals of an elephant and a peacock on warm ivory lime plaster with red and ochre painted borders; on the upper floor a wooden gallery with carved brackets and five jharokha balconies with lattice screens and small canopies; a parapet on top with two small domed chhatris at the corners. The bottom edge of the wall touches the bottom of the image. Everything ABOVE the parapet (the sky) must be perfectly flat, solid, uniform pure magenta (#FF00FF) — no sky, no clouds, no shadow, no frame, no text. Crisp clean edges against the magenta.
+```
+
+### 62 · `chowk-sidewall.png` — aspect **3:4** — count **x1**
+A side of the courtyard; used on both sides, angled inward.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one bay of the side wing of a traditional Gujarati haveli courtyard, seen perfectly straight-on: on the ground floor a covered verandah (osri) with two carved teak pillars on stone bases and carved brackets, a hanging brass lamp between them, a raised plinth with two steps; on the upper floor one jharokha balcony with a lattice screen and a small canopy; warm ivory lime-plaster walls with red and ochre painted borders and a small painted parrot motif. The bottom of the plinth touches the bottom edge. Everything above the roofline must be perfectly flat, solid, uniform pure magenta (#FF00FF) — no sky, no shadow, no frame, no text.
+```
+
+### 63 · `chori.png` — aspect **1:1** — count **x2** — **most important**
+The Gujarati wedding chori. The couple at the havan is placed inside it.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: a traditional Gujarati wedding chori (mandap) seen straight-on from the front at eye level, symmetrical: four slender pillars wrapped in banana stems and marigold garlands, and at each of the four corners a tall tower of seven stacked round clay pots (matli) painted red, yellow and green with white dots, each tower topped with a coconut on mango leaves; a canopy above made of a red-and-gold bandhani cloth roof with marigold strings and mango leaves hanging along its front edge; a low square platform at the bottom with a small painted border. The OPEN SPACE between the pillars, under the canopy and above the platform, must be perfectly flat, solid, uniform pure magenta (#FF00FF) — empty, no people, no fire (they are placed there later) — and so must everything around the chori. No shadow, no frame, no text. Crisp clean edges against the magenta.
+```
+
+### 64 · `tulsi-kyaro.png` — aspect **3:4** — count **x1**
+The sacred tulsi planter in the courtyard.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: a traditional Gujarati tulsi kyaro (sacred basil planter) seen from the front at eye level: a small square brick-and-lime altar about waist high, painted ochre and white with red borders, a kumkum sathiya and small painted lotuses on its front, a lush green tulsi plant growing from the top, a lit brass diya and a few marigolds on its ledge, a small marigold garland around it. The whole planter inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no floor, no shadow, no frame, no text.
+```
+
+### 65 · `chowk-floor.png` — aspect **1:1** — count **x1**
+The courtyard floor. **Full-bleed texture, no magenta.**
+```
+A flat, full-frame texture filling the entire image edge to edge, seen perfectly straight down from above with no perspective, and match the painting style of the reference image exactly: the floor of a Gujarati haveli courtyard paved with large warm sandstone tiles, and in the middle a large round traditional rangoli of lotus petals and peacock motifs in red, saffron, yellow, green and white with a ring of small lit diyas, and a few marigold and rose petals scattered on the stones. Even soft light, no objects, no people, no text, no border.
+```
+
+### 66 · `garland-swag.png` — aspect **16:9** — count **x1**
+Garlands strung across the courtyard, above the guest.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one long swag of fresh orange and yellow marigold garland with glossy mango leaves and small brass bells, hanging in a gentle curve from the top-left corner to the top-right corner of the frame (lowest in the middle), with three short marigold strings dangling from it. Wide, the whole swag inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no wall, no sky, no shadow, no frame, no text.
+```
+
+### 67 · `brass-jhoomar.png` — aspect **3:4** — count **x1** — optional
+A big brass hanging lamp over the courtyard.
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference image exactly. Subject: one large ornate antique brass hanging lamp (deepmala jhoomar) seen from the front: three tiers of small brass oil lamps with lit flames and a soft warm glow, peacock finials, delicate brass chains rising to a single ring at the top, small bells hanging from the lowest tier. The whole lamp and its chains inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no ceiling, no shadow, no frame, no text.
+```

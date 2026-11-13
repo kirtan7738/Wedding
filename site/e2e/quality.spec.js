@@ -30,7 +30,7 @@ test('cover is visible within 2.5 s on Fast 4G', async ({ page, browserName }, i
   await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 150, downloadThroughput: (9 * 1024 * 1024) / 8, uploadThroughput: (1.5 * 1024 * 1024) / 8 });
   const t0 = Date.now();
   await page.goto('/', { waitUntil: 'commit' });
-  await expect(page.getByRole('button', { name: /આમંત્રણ ખોલો/ })).toBeVisible({ timeout: 5000 });
+  await expect(page.getByRole('button', { name: /દ્વાર ખોલો/ })).toBeVisible({ timeout: 5000 });
   expect(Date.now() - t0).toBeLessThan(2500);
 });
 

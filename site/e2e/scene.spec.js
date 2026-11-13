@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-const tapOpen = (page) => page.getByRole('button', { name: /આમંત્રણ ખોલો/ }).click();
+const tapOpen = (page) => page.getByRole('button', { name: /દ્વાર ખોલો/ }).click();
 const cinemaReady = (page) => page.waitForFunction(() => document.documentElement.classList.contains('cinema'), null, { timeout: 30_000 });
 
 // Headless Chrome renders WebGL in software (SwiftShader): frames are slow, so these run one at a time with room.

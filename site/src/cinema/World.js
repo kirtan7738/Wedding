@@ -3,7 +3,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import * as S from './shaders.js';
 import { sampleRig, springTo } from './rig.js';
 import { sharedUniforms, buildSet, petalCloud, FOG } from './scenery.js';
-import { addPaintedLayers, fitLayers, floatLayers, handPoint } from './painted.js';
+import { addPaintedLayers, fitLayers, floatLayers, handPoint, chooseHero, chooseCover, HAVELI } from './painted.js';
 import { paintedDoves } from './birds.js';
 
 /**
@@ -151,6 +151,9 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
   const dovesFx = paintedDoves(scene);
   // painted miniature layers (reference reel) stream in after the first frame — never block the cover
   let paintedMeshes = [];
+  // which way the doors swing: the Mughal gate's ivory doors open toward the guest; the haveli's teak doors open
+  // inward, into the courtyard (else the wide leaves would swing out over the carved frame and its lintel)
+  let doorSwing = 1;
   const painted = addPaintedLayers(scene, U, {
     onGate: () => set.doorFrame.forEach((m) => (m.visible = false)),
     // painted brass lamps hang where the 3D lanterns were; painted diyas sit where the gate's 3D diyas were
@@ -160,6 +163,19 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
     ],
   }).then(async (meshes) => {
     paintedMeshes = meshes;
+    // the hero: inside the haveli chowk once its back wall is painted (round 10), else the garden
+    if (chooseHero(meshes)) {
+      [set.lawn, set.walk, set.frame].forEach((o) => o && (o.visible = false));
+      const floorTex = await new THREE.TextureLoader().loadAsync('/img/art/chowk-floor.webp').catch(() => null);
+      if (floorTex) floorTex.colorSpace = THREE.SRGBColorSpace;
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(16, 16),
+        new THREE.MeshBasicMaterial(floorTex ? { map: floorTex, toneMapped: false } : { color: '#e6cfa4', toneMapped: false }),
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.set(0, 0.012, -14);
+      scene.add(floor);
+    }
     fitLayers(meshes, W / H);
     if (meshes.loaded.has('couple-havan')) meshes.filter((m) => m.userData.layer.src === 'couple').forEach((m) => (m.visible = false));
     if (meshes.loaded.has('diya')) {
@@ -172,21 +188,61 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
       for (let i = 0; i < count; i++) sz.setX(i, 0);
       sz.needsUpdate = true;
     }
-    // ivory carved door leaves, if painted
-    const t = await new THREE.TextureLoader().loadAsync('/img/art/door-leaf-2.webp').catch(() => null);
-    if (t) {
-      t.colorSpace = THREE.SRGBColorSpace;
-      const mk = (mirror) => {
-        const tt = t.clone();
-        if (mirror) {
-          tt.wrapS = THREE.RepeatWrapping;
-          tt.repeat.x = -1;
-        }
-        tt.needsUpdate = true;
-        return new THREE.MeshStandardMaterial({ map: tt, color: '#cdbb98', roughness: 0.7, emissive: '#ffffff', emissiveMap: tt, emissiveIntensity: 0.06 });
-      };
-      set.doors.leafL.material[4] = mk(false);
-      set.doors.leafR.material[4] = mk(true);
+    // painted door leaves. With the haveli doorway (round 9 #42): the carved teak door (#41), split down its middle
+    // into two leaves, so the whole painting fills the opening unstretched (its sathiya whole, the knocker at the
+    // seam side); the top stud row tucks behind the lintel and the bottom plates behind the sill.
+    // Without it: the ivory carved leaves, mirrored, on the Mughal gate.
+    const leaf = (src) => new THREE.TextureLoader().loadAsync(src).catch(() => null);
+    const haveliGate = chooseCover(meshes);
+    const haveli = haveliGate && (await leaf('/img/art/haveli-door-leaf.webp'));
+    const haveliR = haveli && (await leaf('/img/art/haveli-door-leaf-r.webp'));
+    const mat = (tex, opts) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.needsUpdate = true;
+      return new THREE.MeshStandardMaterial({ map: tex, emissive: '#ffffff', emissiveMap: tex, ...opts });
+    };
+    // the painted teak keeps its exact colours, like every other painting (unlit, not tone-mapped)
+    const painting = (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.needsUpdate = true;
+      const m = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, fog: false });
+      m.color.setScalar(0.97);
+      return m;
+    };
+    if (haveliGate) set.rangoli && (set.rangoli.visible = false); // the painted threshold carries its own rangoli
+    if (haveli && haveliR) {
+      const { leafL, leafR, hingeL, hingeR } = set.doors;
+      leafL.material[4] = painting(haveli);
+      leafR.material[4] = painting(haveliR);
+      const edge = new THREE.MeshStandardMaterial({ color: '#5a3416', roughness: 0.6 });
+      [0, 1, 2, 3, 5].forEach((i) => {
+        leafL.material[i] = edge;
+        leafR.material[i] = edge;
+      });
+      const W = 1.6;
+      const H = 4.6;
+      const wl = HAVELI.openW / 2 + 0.1; // wider than half the opening: the leaves sit 0.4 m behind the frame, so parallax would open a gap at the jambs
+      const hl = (wl / (haveli.image.width / haveli.image.height)) * 1; // the painting's own proportions
+      leafL.scale.set(wl / W, hl / H, 1);
+      leafR.scale.set(wl / W, hl / H, 1);
+      leafR.position.x = -wl;
+      hingeL.position.x = -wl;
+      hingeR.position.x = wl;
+      doorSwing = -1; // inward
+    } else {
+      const t = await leaf('/img/art/door-leaf-2.webp');
+      if (t) {
+        const mk = (mirror) => {
+          const tt = t.clone();
+          if (mirror) {
+            tt.wrapS = THREE.RepeatWrapping;
+            tt.repeat.x = -1;
+          }
+          return mat(tt, { color: '#cdbb98', roughness: 0.7, emissiveIntensity: 0.06 });
+        };
+        set.doors.leafL.material[4] = mk(false);
+        set.doors.leafR.material[4] = mk(true);
+      }
     }
     return meshes;
   });
@@ -286,8 +342,8 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
 
     // doors + light
     const door = state.door;
-    set.doors.hingeL.rotation.y = -door * 1.95;
-    set.doors.hingeR.rotation.y = door * 1.95;
+    set.doors.hingeL.rotation.y = -door * 1.95 * doorSwing;
+    set.doors.hingeR.rotation.y = door * 1.95 * doorSwing;
     const flick = 0.85 + 0.15 * Math.sin(time * 13) * Math.sin(time * 7.3 + 1);
     diyaL.intensity = 5 * flick;
     diyaR.intensity = 5 * (1.7 - flick);
