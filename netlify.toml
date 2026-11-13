@@ -1,0 +1,15 @@
+# Netlify: the website lives in site/ and is built (prerendered) before publishing.
+[build]
+  base = "site"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  VITE_SITE_URL = "https://princy-parth.netlify.app"
+
+# hashed build assets never change → cache them for a year; the page itself always revalidates
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
