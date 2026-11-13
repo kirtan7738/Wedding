@@ -180,6 +180,11 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
     }
     return meshes;
   });
+  // resolves once every painted piece (and the painted door leaves) is on screen — a snapshot taken before this
+  // would show the code-drawn red doors (user, 13 Nov)
+  const paintedReady = painted
+    .catch(() => null)
+    .then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
 
   // ---------------------------------------------------------------- state
   const state = {
@@ -336,6 +341,7 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
   raf = requestAnimationFrame(frame);
 
   const world = {
+    paintedReady,
     renderer,
     scene,
     camera,

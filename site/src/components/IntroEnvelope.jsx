@@ -29,14 +29,16 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
     let alive = true;
     let tries = 0;
     const poll = () => {
-      if (!alive || started.current) return;
+      if (!alive) return; // keep polling even after an early tap — the snapshot can still swap in
       const w = worldRef.current;
       if (w && document.documentElement.classList.contains('cinema')) {
         w.coverDrift = false;
-        setTimeout(() => {
-          if (!alive || started.current) return;
-          takeSnapshot();
-        }, 700);
+        // only once the painted gate and doors are in (else the card would show the code-drawn red doors)
+        Promise.resolve(w.paintedReady).then(() =>
+          setTimeout(() => {
+            if (alive) takeSnapshot();
+          }, 300),
+        );
         return;
       }
       if (++tries < 80) setTimeout(poll, 250);
@@ -50,11 +52,19 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
   }, []);
 
   const takeSnapshot = () => {
+    if (snapped.current) return null;
+    // too late to swap once the push-in has started
+    if (window.__introTl && window.__introTl.time() > 4.2) return null;
     try {
       const url = worldRef.current?.snapshot?.();
       if (url) {
         snapped.current = true;
-        setScene(url);
+        const img = new Image();
+        img.src = url;
+        img.decode().then(
+          () => setScene(url),
+          () => setScene(url),
+        );
         return url;
       }
     } catch {
@@ -68,10 +78,9 @@ export default function IntroEnvelope({ worldRef, onBegin, onDone }) {
     started.current = true;
     onBegin?.(); // gesture-bound: unlock audio here
     navigator.vibrate?.(12);
-    if (!snapped.current && worldRef.current) {
-      worldRef.current.coverDrift = false;
-      takeSnapshot();
-    }
+    // not ready yet: the card shows the painted still for now; the live snapshot swaps in as soon as the
+    // painted pieces have loaded (well before the zoom), so the hand-over still lands exactly
+    if (worldRef.current) worldRef.current.coverDrift = false;
     // let React paint the snapshot, then run on the next frame
     requestAnimationFrame(() => requestAnimationFrame(play));
   };

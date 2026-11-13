@@ -3,7 +3,7 @@
  * Gujarati text: spec §5 + research/kankotri-content.md. Elders of BOTH families proofread before launch.
  * Bold spans in invitation lines are marked with **…**.
  */
-const SITE_URL = (import.meta.env && import.meta.env.VITE_SITE_URL) || 'https://princy-parth.vercel.app';
+const SITE_URL = (import.meta.env && import.meta.env.VITE_SITE_URL) || 'https://princy-parth.netlify.app';
 
 const MAPS_QUERY = 'Atithi Party Plot, Davalpura Road, Petlad, Anand, Gujarat';
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import jsQR from 'jsqr';
 
-const SITE = process.env.VITE_SITE_URL || 'https://princy-parth.vercel.app';
+const SITE = process.env.VITE_SITE_URL || 'https://princy-parth.netlify.app';
 
 test.beforeEach(({}, info) => test.skip(info.project.name !== 'm390', 'static checks once'));
 
