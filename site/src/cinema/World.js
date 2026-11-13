@@ -3,7 +3,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import * as S from './shaders.js';
 import { sampleRig, springTo } from './rig.js';
 import { sharedUniforms, buildSet, petalCloud, FOG } from './scenery.js';
-import { addPaintedLayers, fitLayers } from './painted.js';
+import { addPaintedLayers, fitLayers, floatLayers, handPoint } from './painted.js';
 import { paintedDoves } from './birds.js';
 
 /**
@@ -118,9 +118,19 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
   const storm = petalCloud(U, C.storm, { mode: 0, palette: STORM, scale: 1.25 });
   camera.add(storm);
   const shower = petalCloud(U, C.shower, { mode: 1, palette: PETALS, scale: 1 });
-  shower.material.uniforms.uCenter.value.set(0, 3.1, -14.2);
-  shower.material.uniforms.uBox.value.set(7, 6.4, 5);
+  // the gods' pushpa vrishti: petals pour from beside the dome down over the arch and the couple
+  shower.material.uniforms.uCenter.value.set(0, 4.3, -14.6);
+  shower.material.uniforms.uBox.value.set(9.5, 6.2, 2.6);
   shower.material.uniforms.uDensity.value = 0;
+  // pushpa vrishti: a stream of petals pours from each god's hand
+  const pours = [0, 1].map(() => {
+    const m = petalCloud(U, tier === 'high' ? 140 : 80, { mode: 3, palette: PETALS, scale: 0.75 });
+    m.material.uniforms.uDensity.value = 0;
+    m.material.uniforms.uFall.value = 0.9;
+    scene.add(m);
+    return m;
+  });
+  const handTmp = new THREE.Vector3();
   const ambient = petalCloud(U, C.ambient, { mode: 1, palette: PETALS, scale: 1 });
   ambient.material.uniforms.uBox.value.set(12, 9, 12);
   ambient.material.uniforms.uFall.value = 0.6;
@@ -316,6 +326,20 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
       }
     }
     dovesFx.update(time, camera);
+    // the gods descend from the sky as the camera arrives at the couple, then pour their flowers
+    const arrive = smooth(0.62, 0.98, t);
+    floatLayers(paintedMeshes, time, arrive);
+    let pi = 0;
+    for (const m of paintedMeshes) {
+      if (!m.userData.layer.divine || pi > 1) continue;
+      const pour = pours[pi++];
+      const u = pour.material.uniforms;
+      handPoint(m, handTmp);
+      u.uCenter.value.copy(handTmp);
+      u.uDir.value.set(...m.userData.layer.divine.pour);
+      u.uTime.value = time;
+      u.uDensity.value = smooth(0.85, 1.0, t) * (1 - smooth(1.6, 2.4, t));
+    }
     renderer.render(scene, camera);
 
     // watchdog

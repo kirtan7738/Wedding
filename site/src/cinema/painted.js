@@ -51,6 +51,11 @@ export const LAYERS = [
   // chhatri, cypress and plantain each own a separate band of the frame (they used to stack behind one another)
   { src: 'cypress', pos: [-9.6, 0, -19], h: 8.4, sway: 0.5 },
   { src: 'cypress', pos: [9.6, 0, -19], h: 8.1, sway: 0.5, flip: true },
+  // pushpa vrishti: Shiv-Parvati (left) and Lakshmi-Narayan (right) lean out of clouds beside the dome and shower
+  // flowers on the couple (the falling petals are the live 3D shower in World.js). Phones: smaller, at the top corners.
+  // hand: where the petals leave the painting (u, v from the image's top-left); pour: direction, toward the couple
+  { src: 'devta-left', pos: [-4.9, 5.85, -15.5], h: 3.1, float: 0.1, divine: { hand: [0.76, 0.46], pour: [1, -0.15, 0.25] }, portrait: { pos: [-1.85, 7.35, -14.9], h: 1.9 } },
+  { src: 'devta-right', pos: [4.9, 5.85, -15.5], h: 3.1, float: 0.1, flip: true, divine: { hand: [0.74, 0.47], pour: [-1, -0.15, 0.25] }, portrait: { pos: [1.85, 7.35, -14.9], h: 1.9 } },
   { src: 'gate', pos: [0, 0, -16], h: 9, tag: 'hero-gate' },
   // the couple, painted (Flow), framed by the arch on the crimson silk — the havan scene replaces the standing pair
   { src: 'couple', pos: [0, 0.86, -15.96], h: 2.6 },
@@ -88,6 +93,23 @@ export const LAYERS = [
 ];
 
 const SOFT = new Set(['grass', 'bougainvillea']);
+/** a soft round glow, drawn once (halo + sparkle sprites) */
+const GLOW = (() => {
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  r.addColorStop(0, 'rgba(255,255,255,1)');
+  r.addColorStop(0.25, 'rgba(255,255,255,0.55)');
+  r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r;
+  g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+})();
+const STAR = new THREE.PlaneGeometry(1, 1);
 
 const swayChunk = /* glsl */ `
   #include <begin_vertex>
@@ -147,6 +169,29 @@ export async function addPaintedLayers(scene, U, { base = '/img/art/', onGate, e
     const m = new THREE.Mesh(geo, mat);
     m.position.set(...l.pos);
     m.userData.baseH = l.h;
+    m.userData.baseW = w;
+    if (l.divine) {
+      // a soft golden glow behind the gods
+      const halo = new THREE.Mesh(
+        new THREE.PlaneGeometry(w * 1.25, l.h * 1.0),
+        new THREE.MeshBasicMaterial({ map: GLOW, color: '#ffd77a', transparent: true, opacity: 0.6, depthWrite: false, toneMapped: false, fog: false }),
+      );
+      halo.position.set(0, l.h * 0.55, -0.06);
+      m.add(halo);
+      m.userData.halo = halo;
+      // gold sparkles around them
+      const sparks = new THREE.Group();
+      for (let k = 0; k < 16; k++) {
+        const sp = new THREE.Mesh(STAR, new THREE.MeshBasicMaterial({ map: GLOW, color: k % 3 ? '#ffe9a8' : '#ffffff', transparent: true, depthWrite: false, toneMapped: false, fog: false }));
+        const ang = (k / 16) * Math.PI * 2 + k;
+        sp.position.set(Math.cos(ang) * w * (0.38 + (k % 4) * 0.05), l.h * (0.55 + Math.sin(ang) * 0.36), 0.05);
+        sp.userData.s = 0.08 + (k % 3) * 0.05;
+        sparks.add(sp);
+      }
+      m.add(sparks);
+      m.userData.sparks = sparks;
+    }
+    m.userData.phase = i * 0.9;
     m.rotation.y = l.rotY || 0;
     if (l.flip) m.scale.x = -1;
     m.userData.layer = l;
@@ -158,6 +203,41 @@ export async function addPaintedLayers(scene, U, { base = '/img/art/', onGate, e
   return meshes;
 }
 
+/** Floating pieces (the gods): bob, sway like a cloud in a breeze, and descend from the sky when the scene opens
+ * (`arrive` 0 → 1). Their halo breathes and their sparkles twinkle. */
+export function floatLayers(meshes, time, arrive = 1) {
+  const a = arrive * arrive * (3 - 2 * arrive);
+  for (const m of meshes) {
+    const f = m.userData.layer.float;
+    if (!f) continue;
+    if (m.userData.baseY == null) m.userData.baseY = m.position.y;
+    const ph = m.userData.phase;
+    m.position.y = m.userData.baseY + Math.sin(time * 0.55 + ph) * f + (1 - a) * 2.6;
+    m.rotation.z = Math.sin(time * 0.4 + ph * 1.3) * 0.025;
+    m.material.opacity = a;
+    m.material.transparent = a < 1;
+    const halo = m.userData.halo;
+    if (halo) halo.material.opacity = a * (0.55 + 0.2 * Math.sin(time * 1.1 + ph));
+    const sparks = m.userData.sparks;
+    if (sparks) {
+      sparks.children.forEach((sp, i) => {
+        const tw = 0.5 + 0.5 * Math.sin(time * (1.6 + (i % 5) * 0.37) + i * 2.1);
+        sp.material.opacity = a * tw * tw;
+        sp.scale.setScalar(sp.userData.s * (0.6 + 0.6 * tw));
+      });
+    }
+  }
+}
+
+/** The world position a god's petals leave from (follows bob, sway, flip and the portrait placement). */
+export function handPoint(m, out) {
+  const { hand } = m.userData.layer.divine;
+  const w = m.userData.baseW;
+  const h = m.userData.baseH;
+  out.set((hand[0] - 0.5) * w, (1 - hand[1]) * h, 0.12);
+  return m.localToWorld(out);
+}
+
 /** Swap to the portrait placements (narrow phone frame) or back to the wide ones. */
 export function fitLayers(meshes, aspect) {
   const portrait = aspect < 0.8;
@@ -166,6 +246,7 @@ export function fitLayers(meshes, aspect) {
     if (!l.portrait) continue;
     const use = portrait ? l.portrait : l;
     m.position.set(...use.pos);
+    m.userData.baseY = use.pos[1];
     const k = use.h / m.userData.baseH;
     m.scale.set(l.flip ? -k : k, k, k);
   }

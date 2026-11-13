@@ -193,6 +193,7 @@ export function petalCloud(U, n, { mode = 1, palette, scale = 1 } = {}) {
       uDensity: { value: 1 },
       uScale: { value: scale },
       uFall: { value: 1 },
+      uDir: { value: new THREE.Vector3(1, 0, 0) },
       uFogDensity: U.uFogDensity,
       uFogColor: U.uFogColor,
     },

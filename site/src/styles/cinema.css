@@ -541,56 +541,6 @@ html:not(.js) body::before, html.stills body::before {
   .cover-title, .closing-blessing, .photo-frame, .cd-num { animation: none !important; }
 }
 
-/* ------------------------------------------------------------------ painted arch panels (Flow arch frame, after the reference reel) */
-.arch-panel {
-  --paper: #8f1424;
-  --side: 20.79%; /* the frame's column width as a share of the panel width (matches the crown) */
-  position: relative;
-  width: calc(100% + 2.5rem);
-  max-width: 560px;
-  margin: 1.2rem -1.25rem 0;
-  filter: drop-shadow(0 22px 40px rgb(80 30 10 / 0.28));
-}
-.arch-panel { --paper-img: url('/img/art/paper-red.webp'); container-type: inline-size; }
-.arch-panel--emerald { --paper: #1f5d3a; --paper-img: url('/img/art/paper-emerald.webp'); }
-.arch-panel--mustard { --paper: #a8741c; --paper-img: url('/img/art/paper-mustard.webp'); }
-.arch-crown, .arch-base { display: block; width: 100%; height: auto; }
-.arch-crown { margin-bottom: -1px; }
-.arch-base { margin-top: -1px; }
-.arch-body {
-  position: relative;
-  padding: 0.2rem calc(var(--side) + 0.55rem) 1rem;
-  background:
-    url('/img/art/arch-side.webp') left top / var(--side) auto repeat-y,
-    linear-gradient(var(--paper), var(--paper)) center / calc(100% - 2 * var(--side) + 2px) 100% no-repeat;
-}
-/* right-hand column: the same strip, mirrored */
-.arch-body::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--side);
-  background: url('/img/art/arch-side.webp') left top / 100% auto repeat-y;
-  transform: scaleX(-1);
-  pointer-events: none;
-}
-/* the painted paper (Flow) in the window, continuing exactly from the crown above (both scaled to the panel width) */
-.arch-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--side);
-  right: var(--side);
-  background: var(--paper-img) -20.79cqw -66.03cqw / 100cqw auto repeat-y;
-  pointer-events: none;
-}
-.arch-panel .arch-body > * { position: relative; }
-/* the content starts up inside the crown's window (drawn over the crown; the crown stays intact) */
-.arch-panel .arch-body > :first-child { margin-top: -17%; }
-.arch-panel .inv-line, .arch-panel .moment-time, .arch-panel .venue-address { color: #fbefd9; }
 
 html.cinema .hero-bottom { padding-top: 0; }
 
@@ -664,7 +614,6 @@ html body { background: #f7efe2; color: var(--ink); }
 
 /* buttons on light */
 .btn--ghost { background: rgb(255 250 240 / 0.8); color: var(--maroon); border-color: rgb(154 111 34 / 0.7); }
-.arch-panel .btn--ghost { background: rgb(0 0 0 / 0.25); color: var(--gold-pale); border-color: rgb(243 213 138 / 0.7); }
 
 
 /* the lantern interlude reads above the palace skyline, not across it */

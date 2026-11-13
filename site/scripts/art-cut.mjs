@@ -27,6 +27,15 @@ const RULES = {
   'lamp-bracket': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0.43, 0.765, 0.555, 1], erase: 'all' }],
   couple: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'couple-havan': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  thali: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'devta-left': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'devta-right': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  clouds: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'dhol-shehnai': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'mehndi-hands': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'pheras': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'ganesh-art': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'venue-illustration': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'env-seal': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0.8, 0, 1, 0.1], erase: 'all' }],
   // the model painted two pond strips: keep the larger lower one
   'lotus-pond': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0, 0, 1, 0.3], erase: 'all' }],
@@ -222,6 +231,49 @@ for (const rule of RULES[name] || []) {
       if (rule.erase === 'all' || (rule.erase === 'light' && light) || (rule.erase === 'stone' && stone) || (rule.erase === 'magenta' && magenta)) out[i + 3] = 0;
     }
   }
+}
+
+// magenta spill: soft glows (halos, smoke, cloud edges) painted against the pink backdrop pick up a pink-lavender
+// cast. Within a band near the cut-out edge, pull magenta-tinted pixels back to neutral/warm (the subject's own
+// pinks, deeper inside, are untouched).
+const DESPILL = { 'devta-left': 60, 'devta-right': 60, pheras: 70, clouds: 40 };
+if (DESPILL[name]) {
+  const band = DESPILL[name];
+  const dist = new Int32Array(W * H).fill(1e9);
+  const qx = [];
+  for (let k = 0; k < W * H; k++) if (out[k * 4 + 3] < 128) (dist[k] = 0), qx.push(k);
+  for (let h = 0; h < qx.length; h++) {
+    const k = qx[h];
+    const d = dist[k];
+    if (d >= band) continue;
+    const x = k % W;
+    const y = (k / W) | 0;
+    for (const nk of [x > 0 ? k - 1 : -1, x < W - 1 ? k + 1 : -1, y > 0 ? k - W : -1, y < H - 1 ? k + W : -1]) {
+      if (nk < 0 || dist[nk] <= d + 1) continue;
+      dist[nk] = d + 1;
+      qx.push(nk);
+    }
+  }
+  for (let k = 0; k < W * H; k++) {
+    if (dist[k] > band || out[k * 4 + 3] === 0) continue;
+    const i = k * 4;
+    const r = out[i], g = out[i + 1], b = out[i + 2];
+    const m = Math.min(r, b) - g;
+    if (m > 12) {
+      const f = 1 - dist[k] / band; // strongest right at the edge
+      out[i] = Math.round(r - m * f);
+      out[i + 2] = Math.round(b - m * f * 1.1);
+      // very light pink glow → let it fade out rather than turn grey
+      if (g > 170 && m > 25) out[i + 3] = Math.round(out[i + 3] * (1 - 0.5 * f));
+    }
+  }
+}
+
+// soft left edge for subjects the painting cut off at the frame's left side
+const FADE_LEFT = { 'devta-left': 0.05, 'devta-right': 0.05 };
+if (FADE_LEFT[name]) {
+  const fw = Math.round(W * FADE_LEFT[name]);
+  for (let y = 0; y < H; y++) for (let x = 0; x < fw; x++) out[px(x, y) + 3] = Math.round(out[px(x, y) + 3] * (x / fw) ** 1.5);
 }
 
 // symmetric subjects cropped on one side: mirror the intact left half onto the right

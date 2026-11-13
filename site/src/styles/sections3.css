@@ -1,0 +1,297 @@
+/* ==================================================================================================
+   Three distinct sections (user, 13 Nov: "all three frames look the same, no uniqueness")
+     હરખનું તેડું — a kankotri patra that unrolls with the scroll
+     શુભ મુહૂર્ત  — a shubh-ghadi timeline on a gold thread
+     શુભ સ્થળ    — a haldi travel ticket that flips to the map
+   ================================================================================================== */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- 1. the patra */
+.patrika {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: 2.4rem auto 0;
+  padding: 0 0.6rem;
+}
+.patrika-rod {
+  position: relative;
+  z-index: 3;
+  display: block;
+  height: 18px;
+  margin: 0 -0.6rem;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #fff3c9 0%, #e9c46a 30%, #a8751f 70%, #6a4510 100%);
+  box-shadow: 0 6px 12px rgb(80 40 0 / 0.35);
+}
+/* turned finials at both ends of each rod */
+.patrika-rod::before,
+.patrika-rod::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  margin-top: -13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff3c9 0%, #e9c46a 35%, #a8751f 75%, #6a4510 100%);
+  box-shadow: 0 3px 6px rgb(80 40 0 / 0.35);
+}
+.patrika-rod::before { left: -12px; }
+.patrika-rod::after { right: -12px; }
+.patrika-rod--top { margin-bottom: -8px; }
+.patrika-rod--bottom { margin-top: -8px; will-change: transform; }
+.patrika-toran {
+  position: absolute;
+  z-index: 4;
+  top: 4px;
+  left: 4%;
+  width: 92%;
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 3px rgb(80 30 0 / 0.25));
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+}
+.patrika-page {
+  position: relative;
+  padding: 7.2rem 1.6rem 1.8rem;
+  text-align: center;
+  background:
+    linear-gradient(90deg, rgb(120 70 20 / 0.12), transparent 6%, transparent 94%, rgb(120 70 20 / 0.12)),
+    url('/img/art/patra-paper.webp') center top / 100% auto repeat-y,
+    #fbf3e4;
+  box-shadow: 0 18px 40px rgb(90 40 10 / 0.18);
+  will-change: clip-path;
+}
+/* a printed double rule (red and gold) inside the paper, like a kankotri page */
+.patrika-page::before {
+  content: '';
+  position: absolute;
+  inset: 0.7rem;
+  border: 1.5px solid #b8893a;
+  outline: 1px solid rgb(143 20 36 / 0.55);
+  outline-offset: 4px;
+  pointer-events: none;
+}
+.patrika .ganesh-medallion { margin-top: 0.2rem; }
+.patrika .inv-invocation { color: #8a5a1c; text-shadow: none; }
+.patrika-rule {
+  display: block;
+  width: 70%;
+  height: 12px;
+  margin: 0.4rem auto 1rem;
+  background:
+    radial-gradient(circle, #8f1424 0 3px, transparent 3.5px) center / 12px 12px no-repeat,
+    linear-gradient(90deg, transparent, #b8893a 20%, #b8893a 80%, transparent) center / 100% 1px no-repeat;
+}
+.patrika .inv-line { color: var(--ink); font-size: 1.02rem; line-height: 1.75; text-shadow: none; }
+.patrika .inv-line strong { color: var(--maroon); font-weight: 700; }
+/* the couple's names: large, red, with a little gold flourish beneath */
+.patrika .inv-name { margin: 0.35rem 0 0.2rem; font-family: var(--font-gu-display); font-size: 2rem; line-height: 1.25; }
+.patrika .inv-name strong {
+  background: linear-gradient(180deg, #c42a35, #8f1424 60%, #6a0d1a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.patrika .inv-name::after {
+  content: '';
+  display: block;
+  width: 5.5rem;
+  height: 10px;
+  margin: 0.1rem auto 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 10'%3E%3Cpath d='M2 5 Q28 -2 55 5 Q82 12 108 5' fill='none' stroke='%23b8893a' stroke-width='1.4'/%3E%3Ccircle cx='55' cy='5' r='2.4' fill='%238f1424'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.patrika-sign { display: flex; align-items: center; justify-content: center; gap: 0.7rem; margin-top: 1.4rem; }
+.patrika-sign img { width: 38px; height: auto; }
+.patrika-sign img.flip { transform: scaleX(-1); }
+.patrika .inv-signoff { margin: 0; font-family: var(--font-gu-display); font-weight: 700; font-size: 1.15rem; color: var(--maroon); }
+
+/* ---------------------------------------------------------------- 2. the shubh-ghadi timeline */
+.muhurat {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 1.2rem auto 0;
+  padding: 0;
+  list-style: none;
+}
+/* the gold thread: from the first medallion's centre down to the last */
+.muhurat-thread {
+  position: absolute;
+  left: 50%;
+  top: 70px;
+  bottom: 150px;
+  width: 5px;
+  margin-left: -2.5px;
+  transform-origin: 50% 0;
+  /* a string of gold beads */
+  background:
+    radial-gradient(circle, #fff3c9 0 1.6px, #c99a3b 2.2px, transparent 2.8px) center top / 5px 9px repeat-y,
+    linear-gradient(180deg, #e9c46a, #b8893a 50%, #e9c46a) center / 1.5px 100% no-repeat;
+  box-shadow: 0 0 10px rgb(233 196 106 / 0.6);
+  border-radius: 2px;
+}
+.muhurat-item { position: relative; }
+.muhurat-step { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.muhurat-medal {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #fffaf0, #f3e3c0);
+  box-shadow:
+    0 0 0 4px #fbf3e4,
+    0 0 0 6px #b8893a,
+    0 0 0 10px rgb(31 93 58 / 0.85),
+    0 0 0 11px #b8893a,
+    0 16px 30px rgb(40 60 20 / 0.25);
+}
+.muhurat-medal img { width: 86%; height: 86%; object-fit: contain; }
+.muhurat-step--hl .muhurat-medal { width: 168px; height: 168px; }
+.muhurat-text {
+  position: relative;
+  z-index: 1;
+  margin-top: 1rem;
+  padding: 0.5rem 1.4rem 0.7rem;
+  border-radius: 14px;
+  background: rgb(255 251 244 / 0.92);
+  box-shadow: 0 8px 20px rgb(60 40 10 / 0.1);
+}
+.muhurat-time { display: flex; align-items: baseline; justify-content: center; gap: 0.45rem; margin: 0; }
+.muhurat-period { font-size: 1rem; color: #1f5d3a; font-weight: 600; }
+.muhurat-clock {
+  font-family: var(--font-gu-display);
+  font-weight: 700;
+  font-size: 2.8rem;
+  line-height: 1;
+  color: #1f5d3a;
+}
+.muhurat .moment-name {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-gu-display);
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.25;
+  color: var(--maroon);
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  filter: none;
+}
+.muhurat-gap {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: max-content;
+  margin: 2.6rem auto;
+  padding: 0.3rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6a4510;
+  background: #fbf3e4;
+  border: 1px solid #b8893a;
+}
+.moments .calendar { margin-top: 1.8rem; }
+
+/* ---------------------------------------------------------------- 3. the ticket */
+.ticket {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 1.6rem auto 0;
+  perspective: 1400px;
+  display: grid;
+}
+.ticket-face {
+  grid-area: 1 / 1;
+  position: relative;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+  box-shadow: 0 20px 40px rgb(110 70 10 / 0.25);
+  overflow: hidden;
+}
+.ticket-front {
+  background:
+    radial-gradient(circle at 0 70%, #f7efe2 0 14px, transparent 15px),
+    radial-gradient(circle at 100% 70%, #f7efe2 0 14px, transparent 15px),
+    url('/img/art/paper-mustard.webp') center / cover,
+    #d9a531;
+  color: #3a1e06;
+}
+.ticket-back {
+  transform: rotateY(180deg);
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  background: url('/img/art/paper-mustard.webp') center / cover, #d9a531;
+}
+.ticket.is-flipped .ticket-front { transform: rotateY(-180deg); }
+.ticket.is-flipped .ticket-back { transform: rotateY(0deg); }
+.ticket-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  background: rgb(110 13 26 / 0.92);
+  color: #f3d58a;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.ticket-mono { font-family: var(--font-gu-display); font-weight: 700; letter-spacing: 0; font-size: 1rem; text-transform: none; }
+.ticket-scene { display: block; width: 100%; height: auto; margin-top: 0.4rem; filter: drop-shadow(0 4px 6px rgb(80 40 0 / 0.2)); }
+.ticket-main { position: relative; padding: 0.4rem 1.2rem 0.8rem; text-align: center; }
+.ticket-art {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0;
+  width: 46%;
+  height: auto;
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 6px rgb(80 40 0 / 0.25));
+}
+.ticket .venue-name { position: relative; margin: 0; font-family: var(--font-gu-display); font-weight: 700; font-size: 1.7rem; line-height: 1.2; color: #6a0d1a; }
+.ticket .venue-address { position: relative; margin: 0.3rem auto 0; max-width: 92%; font-size: 0.86rem; line-height: 1.5; color: #3a1e06; text-shadow: none; }
+.ticket-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-top: 2px dashed rgb(106 13 26 / 0.45); /* the perforation */
+  text-align: center;
+}
+.ticket-facts dt { font-size: 0.72rem; color: #6a4510; }
+.ticket-facts dd { margin: 0.1rem 0 0; font-family: var(--font-gu-display); font-weight: 700; font-size: 1rem; color: #3a1e06; }
+.ticket-stub { display: flex; gap: 0.6rem; padding: 0 1rem 1.1rem; }
+.ticket-btn { flex: 1; min-height: 52px; padding: 0.4rem 0.8rem; }
+.ticket .btn--ghost { background: rgb(255 251 244 / 0.9); color: #6a0d1a; border-color: rgb(106 13 26 / 0.5); }
+.ticket .venue-map { flex: 1; min-height: 300px; overflow: hidden; border-radius: 12px; border: 2px solid rgb(106 13 26 / 0.5); background: #f3e3c0; }
+.ticket .venue-map iframe { width: 100%; height: 100%; min-height: 300px; border: 0; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket-face { transition: none; }
+}
+
+/* ---------------------------------------------------------------- round 7 art */
+.patrika-ganesh { width: 118px; margin: 0 auto 0.2rem; }
+.patrika-ganesh img { display: block; width: 100%; height: auto; filter: drop-shadow(0 4px 8px rgb(120 60 0 / 0.2)); }
+.interlude-art { display: block; width: min(86vw, 360px); height: auto; margin: 0 auto 1.2rem; filter: drop-shadow(0 16px 24px rgb(90 40 10 / 0.18)); }
+.interlude { justify-content: center; padding-top: 4rem; }
+.cd-art { display: block; width: min(56vw, 220px); height: auto; margin: 0.2rem auto 0.6rem; filter: drop-shadow(0 10px 16px rgb(90 40 10 / 0.2)); }
+.closing-band { display: block; width: min(52vw, 210px); height: auto; margin: 1.6rem auto -0.4rem; filter: drop-shadow(0 10px 16px rgb(90 40 10 / 0.18)); }

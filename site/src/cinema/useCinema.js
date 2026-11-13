@@ -34,6 +34,7 @@ export function useCinema(tier, worldRef) {
         if (opened) world.setOverride(null);
         world.setDoor(opened ? 1 : 0);
         world.setAmbient(opened ? 0.5 : 0.28); // a few petals drift past the doors while the guest reads the cover
+        if (opened) world.setShower(1); // the gods' flower shower over the couple
         if (!opened) world.coverDrift = true;
 
         // the names on the arch fade as soon as the guest starts scrolling (the hero copy scrolls up past them)

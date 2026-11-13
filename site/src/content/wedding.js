@@ -91,6 +91,12 @@ const wedding = {
     afterText: 'શુભ લગ્ન સંપન્ન — આપના આશીર્વાદ બદલ આભાર',
     calendar: 'કેલેન્ડરમાં ઉમેરો',
     mapTitle: 'નકશો',
+    showMap: 'નકશો જુઓ',
+    backToTicket: '‹ પાછા',
+    ticketDate: 'તારીખ',
+    ticketTime: 'સમય',
+    ticketTown: 'ગામ',
+    ticketTownName: 'પેટલાદ',
   },
 
   share: {

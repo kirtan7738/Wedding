@@ -18,6 +18,7 @@ export default function Closing() {
           {wedding.signoff}
         </p>
       </div>
+      <img className="closing-band" data-reveal="cine" src="/img/art/dhol-shehnai.webp" alt="" aria-hidden="true" width="636" height="445" loading="lazy" decoding="async" />
       <div className="closing-share" data-reveal="cine">
         <ShareBar />
       </div>

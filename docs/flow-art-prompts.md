@@ -282,3 +282,95 @@ The inner side of the two panels (seen while they swing open). Symmetric, so one
 ```
 A flat, full-frame painted texture for the inside of a traditional Gujarati wedding kankotri panel, filling the entire image edge to edge, in Mughal miniature style: ivory paper with a thin red-and-gold border, and running down the full height a slender painted vine of marigolds, red roses and green leaves with two small peacocks facing inward, delicate and airy. No text.
 ```
+
+---
+
+# Round 6 — the three redesigned sections
+
+The invitation is now an unrolling patra, the timings a gold-thread timeline, and the venue a flip-over ticket. These pieces would finish them. Same settings, peacock as reference.
+
+### 30 · `thali.png` — aspect **1:1** — count **x1** — **needed** (the ભોજન medallion currently shows a kalash)
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting — fine detail, gouache texture, soft warm daylight. Subject: a traditional Gujarati wedding feast thali seen from a gentle three-quarter angle: a round polished brass thali with small brass katoris of dal, kadhi, shaak and shrikhand, golden puris, a ladoo and a mohanthal piece, rice with a sprig of coriander, a banana leaf edge, and a few marigold petals on the rim. Whole thali inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no table, no shadow, no frame or border, no text.
+```
+
+### 31 · `patra-paper.png` — aspect **9:16** — count **x1** — optional
+Handmade paper for the unrolling patra (replaces the plain paper texture).
+```
+A flat, full-frame texture filling the entire image edge to edge: warm ivory handmade paper for a traditional Gujarati wedding kankotri, visible soft fibres and a deckled feel, a very faint pattern of tiny gold paisleys scattered sparsely, gentle warm vignette at the edges. No objects, no border, no text, even lighting.
+```
+
+### 32 · `venue-illustration.png` — aspect **4:3** — count **x2** — optional
+A painted scene of the venue for the ticket (replaces the elephant on the ticket).
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting — fine detail, gouache texture, warm evening light. Subject: an open-air Gujarati wedding party plot at dusk seen from the front: a decorated mandap with marigold and white flower drapes and small lights in the centre, festoons of string lights overhead, a few round banquet tables with white cloths to the sides, potted plants, and a decorated entrance gate with a toran — no people. Whole scene inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) above and around the scene — no sky colour, no frame or border, no text.
+```
+
+---
+
+# Round 7 — finishing touches (most useful first)
+
+Same settings (Nano Banana Pro, peacock as reference). Save in the `wed` folder and say "check".
+
+### 33 · `og-scene.png` — aspect **16:9** — count **x2** — **must-have**
+The picture guests see in the **WhatsApp link preview**. The live site has none yet. Leave the centre plain: the names and date are added on top in code (AI-written Gujarati letters come out wrong).
+```
+A wide, full-frame painted illustration for a luxury Gujarati wedding invitation, filling the entire image edge to edge, in authentic Mughal / Rajasthani miniature painting style with fine detail and gouache texture: a kumkum-red bandhani wedding envelope with a gold Ganesh wax seal lying slightly open on ivory handmade paper, an ivory kankotri card half drawn out of it, marigold and rose petals and a small brass diya scattered around, a marigold toran along the top edge. The CENTRE of the image (middle third, left to right) must stay calm and fairly plain — ivory paper — with NO text and NO letters anywhere. Soft warm daylight.
+```
+
+### 34 · `ganesh.png` — aspect **1:1** — count **x2** — recommended
+The Ganesh on the patra and in the invitation is still a small image from the printed card. A painted one in the same style as everything else would match.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting — exquisite fine detail, gouache texture, delicate gold-leaf outlines. Subject: Lord Ganesha seated on a lotus, front view, four arms holding a modak, an axe, a noose and blessing with the fourth, a gold crown, a red dhoti with gold border, a small mouse at his feet, inside a round gold halo of lotus petals. Centred, whole figure inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no frame, no text.
+```
+
+### 35 · `pheras.png` — aspect **4:3** — count **x2** — recommended
+For the quiet «સાત ફેરા · સાત વચન · સાત જન્મનો સાથ» section, which is only text right now.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference images exactly (the same bride and groom as the reference couple). Style: authentic Mughal / Rajasthani miniature painting — fine detail, gouache texture, warm firelight. Subject: the bride and groom taking the seven pheras around a small sacred fire in a brass havan kund, seen from the side: the groom leading, the bride following, their garments tied together with a red-and-gold knot (gathbandhan), marigold petals falling, a hint of smoke rising. Full figures, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no mandap, no floor colour, no shadow, no frame, no text.
+```
+
+### 36 · `mehndi-hands.png` — aspect **1:1** — count **x1** — nice to have
+For the countdown («શુભ ઘડીની રાહ»), which has no art yet.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal miniature painting — fine detail, gouache texture, soft warm light. Subject: a bride's two hands with intricate red-brown bridal mehndi, red-and-gold bangles and a gold ring, gently cupped together and holding a small lit clay diya with a bright flame, a few marigold petals in the palms. Front view, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no frame, no text.
+```
+
+### 37 · `dhol-shehnai.png` — aspect **16:9** — count **x1** — nice to have
+A small festive band (dhol and shehnai) for the closing, next to the share buttons.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting — fine detail, gouache texture. Subject: a traditional wedding dhol drum decorated with red and gold cloth and marigolds, a brass shehnai and a pair of small brass manjira cymbals arranged together, with a few rose petals. No people. Whole group inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no frame, no text.
+```
+
+### Videos — not recommended
+The site is already animated live, and a video would add several megabytes for guests opening it on mobile data from WhatsApp. If you want one anyway, the only place it would earn its weight is a **5-second seamless loop of the havan fire** (Seedance image-to-video from `couple-havan.png`, prompt: "the flames in the havan kund flicker gently and a thin wisp of smoke curls up; the couple stays still; seamless loop, no camera movement").
+
+---
+
+# Round 8 — pushpa vrishti: the gods shower flowers on the couple (couple's scene)
+
+The gods lean out of soft clouds on either side of the gate's dome and shower marigold and rose petals on the couple at the havan (the falling petals are live 3D; the paintings only need flowers in hand). Same settings, **attach the peacock and the havan couple as references** so the style matches. Painted, not photo-real. Save in the `wed` folder and say "check".
+
+## Chosen: option A — Shiv-Parvati (left) and Lakshmi-Narayan (right)
+
+### 38 · `devta-left.png` — aspect **3:4** — count **x2**
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference images exactly. Style: authentic Mughal / Rajasthani miniature painting — exquisite fine detail, gouache texture, delicate gold-leaf outlines, soft divine glow. Subject: Lord Shiva and Goddess Parvati together, seen from the waist up, seated side by side on a soft white cloud and leaning gently toward the RIGHT (toward the couple they are blessing), with serene smiling faces. Shiva: blue-grey skin, matted hair with the crescent moon and the Ganga, rudraksha malas, a tiger-skin over one shoulder. Parvati: red-and-gold saree, gold ornaments, a bindi. Each holds out a small gold basket of marigold and rose petals with one hand, and with the other scatters a stream of petals downward to the RIGHT. A soft golden halo behind each head. Whole figures and cloud inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no sky, no shadow, no frame, no text.
+```
+
+### 39 · `devta-right.png` — aspect **3:4** — count **x2**
+```
+Create a single isolated illustration asset for a luxury Gujarati wedding invitation website, and match the painting style of the reference images exactly. Style: authentic Mughal / Rajasthani miniature painting — exquisite fine detail, gouache texture, delicate gold-leaf outlines, soft divine glow. Subject: Lord Vishnu (Narayan) and Goddess Lakshmi together, seen from the waist up, seated side by side on a soft white cloud and leaning gently toward the LEFT (toward the couple they are blessing), with serene smiling faces. Vishnu: blue skin, a tall gold crown, a yellow pitambar, a Kaustubha jewel and a vaijayanti garland. Lakshmi: a pink-and-gold saree, a gold crown, a pink lotus in her hair. Each holds out a small gold basket of marigold and rose petals with one hand, and with the other scatters a stream of petals downward to the LEFT. A soft golden halo behind each head. Whole figures and cloud inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no sky, no shadow, no frame, no text.
+```
+
+### 40 · `clouds.png` — aspect **16:9** — count **x1**
+Soft clouds the figures rest on, and that drift across the sky.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: Mughal miniature painting clouds — soft rounded white and pale-gold cloud banks with delicate curling edges, lightly outlined in gold, a few tiny marigold petals drifting among them. A wide horizontal bank of clouds, centred, whole bank inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no sky colour, no shadow, no frame, no text.
+```
+
+## Fallback B — unnamed devtas and devis
+Use the same two prompts, but replace the "Subject" figures with: *"a celestial devta (left: a youthful god with a gold crown and pearl ornaments; right: a graceful devi in a pink-and-gold saree with a gold crown), seated on a soft white cloud"* — no specific deity attributes.
+
+## Fallback C — Brahma, Vishnu and Mahesh with their consorts
+Three images instead of two: `devta-left` = Brahma and Saraswati, `devta-centre` = Vishnu and Lakshmi (facing the viewer, smaller, high in the sky), `devta-right` = Shiva and Parvati. Same prompt style, each scattering petals toward the centre. Crowded on phones; best on desktop.

@@ -46,6 +46,7 @@ export default function Countdown({ now = Date.now }) {
       <SceneTitle n={3} kicker="Counting the moments">
         {wedding.copy.countdownTitle}
       </SceneTitle>
+      <img className="cd-art" data-reveal="cine" src="/img/art/mehndi-hands.webp" alt="" aria-hidden="true" width="705" height="384" loading="lazy" decoding="async" />
       <p className="cd-sub section-sub" data-reveal="cine">
         {wedding.events[0].name} · {wedding.events[0].timeText}
       </p>

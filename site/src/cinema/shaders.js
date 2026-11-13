@@ -149,6 +149,7 @@ export const petalsVert = /* glsl */ `
   uniform float uDensity;
   uniform float uScale;
   uniform float uFall;
+  uniform vec3 uDir;
   ${FOG_V}
   varying vec3 vNormal;
   varying vec2 vUv;
@@ -162,7 +163,15 @@ export const petalsVert = /* glsl */ `
     float vis = 1.0;
     vec3 p;
     float spin;
-    if (uMode > 1.5) {
+    if (uMode > 2.5) {
+      // pour: petals leave the hand (uCenter) toward uDir with a little spread, arc down under gravity, flutter, fade
+      float life = 3.4;
+      float t = mod(uTime + aSeed.w * life, life);
+      vec3 v0 = uDir * (0.35 + aSeed.x * 0.55) + vec3((aSeed.y - 0.5) * 0.35, (aSeed.z - 0.2) * 0.25, (aSeed.x - 0.5) * 0.4);
+      p = uCenter + v0 * t + vec3(sin(t * 2.4 + aSeed.w * 9.0) * 0.12, -0.42 * uFall * t * t, cos(t * 1.9 + aSeed.y * 7.0) * 0.08);
+      vis = smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(life * 0.7, life, t)) * step(aSeed.w, uDensity);
+      spin = t * (2.0 + aSeed.z * 4.0) + aSeed.x * 6.28;
+    } else if (uMode > 1.5) {
       // tap burst (camera space): petals erupt from uCenter toward the viewer, then fall and fade
       float t = uTime - aSeed.z * 0.08;
       vec3 dir = normalize(aSeed.xyz - 0.5 + vec3(0.001));
