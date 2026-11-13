@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SvgDefs from './components/SvgDefs.jsx';
 import Cover from './components/Cover.jsx';
+import IntroEnvelope from './components/IntroEnvelope.jsx';
 import OpeningLayer from './components/OpeningLayer.jsx';
 import SkipButton from './components/SkipButton.jsx';
 import MusicPill from './components/MusicPill.jsx';
@@ -26,6 +27,7 @@ export default function App() {
   const opening = useOpening(worldRef);
   const { refs, state, tier, player, open, skip } = opening;
   const { canvasRef } = useCinema(tier, worldRef);
+  const [introDone, setIntroDone] = useState(false);
 
   return (
     <>
@@ -35,6 +37,7 @@ export default function App() {
       <div className="film-vignette" aria-hidden="true" />
       <div className="film-grain" aria-hidden="true" />
       {state !== 'open' && <Cover refs={refs} onOpen={open} opening={state === 'opening'} />}
+      {state === 'cover' && !introDone && <IntroEnvelope worldRef={worldRef} onBegin={() => player?.start()} onDone={() => setIntroDone(true)} />}
       <OpeningLayer refs={refs} tier={tier} />
       <div className="letterbox letterbox--top" aria-hidden="true" />
       <div className="letterbox letterbox--bottom" aria-hidden="true" />

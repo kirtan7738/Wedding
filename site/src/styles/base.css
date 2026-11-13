@@ -3,6 +3,7 @@
 @import './fonts.css';
 @import './ornaments.css';
 @import './cinema.css';
+@import './intro.css';
 
 html {
   -webkit-text-size-adjust: 100%;

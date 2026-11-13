@@ -23,6 +23,8 @@
       // Returning in the same session (e.g. back button): skip the cover without a flash.
       try {
         if (sessionStorage.getItem('kankotri-opened')) document.documentElement.classList.add('opened');
+        // automated tests skip the envelope intro (they exercise it separately)
+        if (localStorage.getItem('kankotri-skip-intro')) document.documentElement.classList.add('intro-done');
       } catch (e) {}
       // Fail-safe only on a real failure (script load error) or a very late boot — never on a merely slow network.
       var failSafe = function () {
@@ -32,7 +34,8 @@
       setTimeout(failSafe, 15000);
       // A tap on the cover before the app is listening is remembered and replayed once it boots.
       document.addEventListener('click', function (e) {
-        if (!window.__booted && e.target.closest && e.target.closest('.cover')) {
+        if (!window.__booted && e.target.closest && e.target.closest('.intro')) window.__pendingIntro = true;
+        else if (!window.__booted && e.target.closest && e.target.closest('.cover')) {
           window.__pendingOpen = true;
           document.documentElement.classList.add('pending-open');
         }

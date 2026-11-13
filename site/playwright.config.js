@@ -15,7 +15,8 @@ export default defineConfig({
   fullyParallel: true,
   workers: 4, // animation timing tests flake under heavier CPU contention
   reporter: [['list']],
-  use: { baseURL: BASE_URL, trace: 'retain-on-failure' },
+  // the envelope intro is skipped by default (e2e/intro.spec.js exercises it on its own)
+  use: { baseURL: BASE_URL, trace: 'retain-on-failure', storageState: 'e2e/skip-intro.json' },
   projects: [
     { name: 'm390', use: { ...devices['Desktop Chrome'], ...mobile(390, 844) } },
     { name: 'm360', use: { ...devices['Desktop Chrome'], ...mobile(360, 740) } },

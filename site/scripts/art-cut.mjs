@@ -23,10 +23,17 @@ const RULES = {
   rangoli: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   kalash: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   toran: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  // a stray second tassel hangs in mid-air under the bracket arm
+  'lamp-bracket': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0.43, 0.765, 0.555, 1], erase: 'all' }],
+  couple: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'couple-havan': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  'env-seal': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0.8, 0, 1, 0.1], erase: 'all' }],
+  // the model painted two pond strips: keep the larger lower one
+  'lotus-pond': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { box: [0, 0, 1, 0.3], erase: 'all' }],
   gate: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   cypress: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
-  grass: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
-  'bougainvillea': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  grass: [{ box: [0, 0, 1, 1], erase: 'magenta' }, { fadeSides: 0.12, fadeBottom: 0.2 }],
+  'bougainvillea': [{ box: [0, 0, 1, 1], erase: 'magenta' }, { fadeBottom: 0.14 }],
   lamp: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   diya: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   birds: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
@@ -160,11 +167,33 @@ for (let y = 0; y < H; y++) {
   }
 }
 
+// soft ends: fade alpha over the outer `fadeSides` of the width (for strips that are cropped at both sides)
+for (const rule of RULES[name] || []) {
+  if (rule.fadeBottom) {
+    // the painting's flat base would sit on the ground as a hard line: let it melt away
+    const fh = Math.round(H * rule.fadeBottom);
+    for (let y = H - fh; y < H; y++) {
+      const f = ((H - 1 - y) / fh) ** 1.3;
+      for (let x = 0; x < W; x++) out[px(x, y) + 3] = Math.round(out[px(x, y) + 3] * f);
+    }
+  }
+  if (!rule.fadeSides) continue;
+  const fw = Math.round(W * rule.fadeSides);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < fw; x++) {
+      const f = (x / fw) ** 1.5;
+      out[px(x, y) + 3] = Math.round(out[px(x, y) + 3] * f);
+      out[px(W - 1 - x, y) + 3] = Math.round(out[px(W - 1 - x, y) + 3] * f);
+    }
+  }
+}
+
 const isFeather = (i) => {
   const r = data[i], g = data[i + 1], b = data[i + 2];
   return (g > r + 12 || b > r + 12) && Math.max(r, g, b) - Math.min(r, g, b) > 40; // saturated green / teal / blue
 };
 for (const rule of RULES[name] || []) {
+  if (!rule.box) continue;
   if (rule.erase === 'fromRight') {
     // walk each row in from the right edge, erasing (stone, its outline, background) until the first feather
     const [x0, y0, , y1] = rule.box;

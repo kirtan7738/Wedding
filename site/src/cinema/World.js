@@ -151,6 +151,7 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
   }).then(async (meshes) => {
     paintedMeshes = meshes;
     fitLayers(meshes, W / H);
+    if (meshes.loaded.has('couple-havan')) meshes.filter((m) => m.userData.layer.src === 'couple').forEach((m) => (m.visible = false));
     if (meshes.loaded.has('diya')) {
       // hide the gate's 3D diyas and their shader flames (the painted diyas carry their own flame); keep the warm halo
       const { mesh, flames, count } = set.doorDiyas;
@@ -354,6 +355,11 @@ export async function createWorld(canvas, { tier = 'high', photoUrl, ganeshUrl }
     },
     setFlash(a) {
       state.flash = a;
+    },
+    /** A still of exactly what the camera sees now (the intro's kankotri shows it inside, then zooms into it). */
+    snapshot() {
+      renderer.render(scene, camera);
+      return renderer.domElement.toDataURL('image/jpeg', 0.88);
     },
     storm() {
       state.stormStart = U.uTime.value;

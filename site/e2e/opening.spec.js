@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const heroVisible = (page) => expect(page.locator('#hero [data-hero-names]')).toBeVisible();
+const heroVisible = (page) => expect(page.locator('#hero .hero-card')).toBeVisible();
 const scrollLocked = (page) => page.evaluate(() => getComputedStyle(document.documentElement).overflow === 'hidden');
 
 test('cover shows the open call-to-action and locks scrolling', async ({ page }) => {

@@ -6,9 +6,7 @@ import ShareBar from './ShareBar.jsx';
 export default function Closing() {
   return (
     <Reveal id="closing" className="closing scene">
-      <div className="closing-emblem" data-reveal="title" aria-hidden="true">
-        <span className="closing-emblem-mono">{wedding.couple.monogram}</span>
-      </div>
+      <img className="closing-couple" data-reveal="title" src="/img/art/couple.webp" alt="" aria-hidden="true" width="1037" height="1600" loading="lazy" decoding="async" />
       <div className="closing-text">
         <p className="closing-blessing foil" data-reveal="cine">
           {wedding.copy.closing}

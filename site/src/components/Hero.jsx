@@ -1,10 +1,13 @@
-import wedding from '../content/wedding.js';
-import NameLettering from './NameLettering.jsx';
+import wedding from "../content/wedding.js";
+import NameLettering from "./NameLettering.jsx";
 
 /**
  * Shot 1 — inside the mandap. The couple's photo hangs in the 3D world (gold arch on the stage);
  * this layer carries the words: invocation and મંગલ પરિણય above, the names and details below.
  */
+/** The couple's names are hidden for now (user, 13 Nov: "remove the name temporarily, will add later"). */
+const SHOW_NAMES = false;
+
 export default function Hero() {
   return (
     <section id="hero" className="hero scene" tabIndex={-1}>
@@ -17,23 +20,31 @@ export default function Hero() {
         </h1>
       </div>
       <div className="hero-bottom">
-        <div className="hero-names" data-hero-names>
-          <span className="hero-name hero-name--princy" data-name>
-            {wedding.couple.bride}
-          </span>
-          <span className="hero-amp" aria-hidden="true">
-            <i />
-            <b>❀</b>
-            <i />
-          </span>
-          <span className="hero-name hero-name--parth" data-name>
-            {wedding.couple.groomShort}
-          </span>
-        </div>
-        <div className="hero-card" data-hero-detail>
-          <p className="hero-date">{wedding.dateText}</p>
-          <p className="hero-samvat">{wedding.samvatText}</p>
-          <p className="hero-venue">{wedding.venue.short}</p>
+        <div className="hero-card">
+          {SHOW_NAMES && (
+          <div className="hero-names" data-hero-names>
+            <span className="hero-name hero-name--princy" data-name>
+              {wedding.couple.bride}
+            </span>
+            <span className="hero-amp" aria-hidden="true">
+              <i />
+              <b>❀</b>
+              <i />
+            </span>
+            <span className="hero-name hero-name--parth" data-name>
+              {wedding.couple.groomShort}
+            </span>
+          </div>
+          )}
+          <p className="hero-date" data-hero-detail>
+            {wedding.dateText}
+          </p>
+          <p className="hero-samvat" data-hero-detail>
+            {wedding.samvatText}
+          </p>
+          <p className="hero-venue" data-hero-detail>
+            {wedding.venue.short}
+          </p>
         </div>
         <p className="scroll-cue" data-hero-detail>
           <span>{wedding.copy.scrollCue}</span>

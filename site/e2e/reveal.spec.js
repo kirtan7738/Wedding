@@ -13,6 +13,7 @@ const namesDone = (page) =>
 test('names are revealed during the opening and end fully visible', async ({ page }, info) => {
   test.skip(info.project.name === 'reduced', 'motion path');
   await page.goto('/');
+  test.skip((await page.locator('#hero [data-name]').count()) === 0, 'names hidden for now (Hero.jsx SHOW_NAMES)');
   await tapOpen(page);
   // mid-reveal the names are partly wiped in (clip-path in use) — poll instead of one fragile instant
   await expect
@@ -38,6 +39,7 @@ test('ambient petals stop when the hero is scrolled away and return with it', as
 test('reduced motion: names are fully visible right away, never wiped in', async ({ page }, info) => {
   test.skip(info.project.name !== 'reduced', 'reduced project only');
   await page.goto('/');
+  test.skip((await page.locator('#hero [data-name]').count()) === 0, 'names hidden for now (Hero.jsx SHOW_NAMES)');
   await tapOpen(page);
   await page.waitForTimeout(900);
   expect(await namesDone(page)).toBe(true);

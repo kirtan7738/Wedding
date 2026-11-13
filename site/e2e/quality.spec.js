@@ -18,7 +18,7 @@ test('large system text (130%) on a 360 px phone: nothing overflows, names stay 
       .map((e) => e.tagName + '.' + (e.getAttribute('class') || '')),
   );
   expect(offenders).toEqual([]);
-  const names = await page.locator('#hero [data-hero-names]').boundingBox();
+  const names = await page.locator('#hero .hero-card').boundingBox();
   expect(names.x).toBeGreaterThanOrEqual(0);
   expect(names.x + names.width).toBeLessThanOrEqual(360);
 });

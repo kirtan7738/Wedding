@@ -30,7 +30,7 @@ test('invitation names both families', async ({ page }) => {
 });
 
 test('no couple photos anywhere; directions and share are wired', async ({ page }) => {
-  await expect(page.locator('main img[src*="couple"], main source[srcset*="couple"]')).toHaveCount(0);
+  await expect(page.locator('main img[src*="/img/couple-"], main source[srcset*="/img/couple-"]')).toHaveCount(0); // the old photos (painted art is fine)
   await expect(page.locator('#venue a[data-directions]')).toHaveAttribute('href', wedding.venue.mapsUrl);
   const wa = await page.locator('a[data-share="whatsapp"]').getAttribute('href');
   expect(wa.startsWith('https://wa.me/?text=')).toBe(true);

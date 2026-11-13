@@ -47,41 +47,47 @@ export const LAYERS = [
   { src: 'grass', pos: [-4.2, 0, 3.6], h: 1.2, flip: true },
   { src: 'grass', pos: [4.2, 0, 3.6], h: 1.2 },
   // --- shot 1: the hero tableau (HZ = −16), composed straight-on like a miniature painting
-  { src: 'chhatri', pos: [-7.4, 0, -21], h: 6.4 },
-  { src: 'chhatri', pos: [7.4, 0, -21], h: 6.4, flip: true },
-  { src: 'cypress', pos: [-4.5, 0, -18], h: 8.6, sway: 0.5 },
-  { src: 'cypress', pos: [4.5, 0, -18], h: 8.3, sway: 0.5, flip: true },
+  // spaced out (user, 13 Nov: "too noisy, add some space") — each element gets its own band of the frame
+  // chhatri, cypress and plantain each own a separate band of the frame (they used to stack behind one another)
+  { src: 'cypress', pos: [-9.6, 0, -19], h: 8.4, sway: 0.5 },
+  { src: 'cypress', pos: [9.6, 0, -19], h: 8.1, sway: 0.5, flip: true },
   { src: 'gate', pos: [0, 0, -16], h: 9, tag: 'hero-gate' },
-  // kalash on the arch's floor at the foot of the names panel
-  { src: 'kalash', pos: [-0.78, 0.86, -15.97], h: 0.78 },
-  { src: 'kalash', pos: [0.78, 0.86, -15.97], h: 0.78, flip: true },
+  // the couple, painted (Flow), framed by the arch on the crimson silk — the havan scene replaces the standing pair
+  { src: 'couple', pos: [0, 0.86, -15.96], h: 2.6 },
+  { src: 'couple-havan', pos: [0, 0.82, -15.9], h: 1.85 },
   // marigold strands in the hero gate's arch, in front of the names panel, tops hidden behind the crown
   ...[-0.85, -0.6375, -0.425, -0.2125, 0, 0.2125, 0.425, 0.6375, 0.85].map((x, i) => ({ src: `strand${((i + 3) % 7) + 1}`, pos: [x, 6.6 - (i % 2 ? 2.3 : 2.65), -16.06], h: i % 2 ? 2.3 : 2.65, sway: 0.5, hang: true })),
   // painted peacocks on the gate's eaves (scaled from the cover placement)
   { src: 'peacock', pos: [-1.66, 4.27, -15.7], h: 2.5 },
   { src: 'peacock', pos: [1.66, 4.27, -15.7], h: 2.5, flip: true },
-  { src: 'plantain', pos: [-3.5, 0, -14.6], h: 4.3, sway: 0.7 },
-  { src: 'plantain', pos: [3.5, 0, -14.6], h: 4.1, sway: 0.7, flip: true },
-  // brass lamps hang from gold wall-brackets on the gate's outer pillars (scenery.js draws the brackets)
-  { src: 'lamp', pos: [-3.12, 3.95, -15.85], h: 2.4 },
-  { src: 'lamp', pos: [3.12, 3.95, -15.85], h: 2.4 },
+  { src: 'plantain', pos: [-4.6, 0, -13.8], h: 3.2, sway: 0.7 },
+  { src: 'plantain', pos: [4.6, 0, -13.8], h: 3.1, sway: 0.7, flip: true },
+  // painted brass lamp on its wall bracket (Flow): the plate sits on the gate's outer pillar, the lamp hangs outward
+  { src: 'lamp-bracket', pos: [-3.33, 3.75, -15.85], h: 2.5, flip: true },
+  { src: 'lamp-bracket', pos: [3.33, 3.75, -15.85], h: 2.5 },
   { src: 'bougainvillea', pos: [-2.15, 0, -14], h: 1.35, sway: 0.25 },
   { src: 'bougainvillea', pos: [2.15, 0, -14], h: 1.3, sway: 0.25, flip: true },
-  { src: 'diya', pos: [-0.7, 0, -13.5], h: 0.3 },
-  { src: 'diya', pos: [0.7, 0, -13.5], h: 0.3, flip: true },
-  { src: 'diya', pos: [-1.35, 0, -13.3], h: 0.3, flip: true },
-  { src: 'diya', pos: [1.35, 0, -13.3], h: 0.3 },
+  // (diyas at the walk removed: the marble steps carry their own)
   // garden beds across the whole foreground, two rows deep
-  ...[-9.2, -6.9, -4.6, -2.3, 0, 2.3, 4.6, 6.9, 9.2].map((x, i) => ({ src: 'grass', pos: [x, 0, -12.7], h: 1.25, flip: i % 2 === 1 })),
-  ...[-8, -5.7, -3.4, -1.15, 1.15, 3.4, 5.7, 8].map((x, i) => ({ src: 'grass', pos: [x, 0, -11.6], h: 1.2, flip: i % 2 === 0 })),
-  ...[-6.8, -4.5, -2.25, 0, 2.25, 4.5, 6.8].map((x, i) => ({ src: 'grass', pos: [x, 0, -10.5], h: 1.15, flip: i % 2 === 1 })),
-  ...[-5.6, -3.4, -1.15, 1.15, 3.4, 5.6].map((x, i) => ({ src: 'grass', pos: [x, -0.15, -9.4], h: 1.1, flip: i % 2 === 0 })),
+  ...[-10.4, -8.1, -5.8, -3.5, 3.5, 5.8, 8.1, 10.4].map((x, i) => ({ src: 'grass', pos: [x, 0, -12.7], h: 1.25, flip: i % 2 === 1 })),
+  ...[-9.4, -6.8, -4.2, 4.2, 6.8, 9.4].map((x, i) => ({ src: 'grass', pos: [x, 0, -11.6], h: 1.2, flip: i % 2 === 0 })),
+  ...[-10.4, -8.1, -5.8, -3.5, 3.5, 5.8, 8.1, 10.4].map((x, i) => ({ src: 'grass', pos: [x, 0, -10.5], h: 1.15, flip: i % 2 === 1 })),
+  ...[-9.4, -6.8, -4.2, 4.2, 6.8, 9.4].map((x, i) => ({ src: 'grass', pos: [x, -0.15, -9.4], h: 1.1, flip: i % 2 === 0 })),
+  // ivory marble steps (Flow) up to the gate's arch, diyas and petals on every tread
+  { src: 'marble-steps', pos: [0, 0, -14.7], h: 1.5 },
+  // flowering bushes line the marble walk so the garden beds end softly at the path
+  ...[-9.5, -11.6].flatMap((z, i) => [
+    { src: 'bougainvillea', pos: [-2.35, -0.06, z], h: 0.95 - i * 0.1, sway: 0.25, flip: i % 2 === 1 },
+    { src: 'bougainvillea', pos: [2.35, -0.06, z], h: 0.95 - i * 0.1, sway: 0.25, flip: i % 2 === 0 },
+  ]),
+  // a lotus pond (Flow) along the lake's edge behind the courtyard — softens the line where lawn meets water
+  ...[-16.2, -10.8, -5.4, 0, 5.4, 10.8, 16.2].map((x, i) => ({ src: 'lotus-pond', pos: [x, -0.05, -22.75], h: 1.4, flip: i % 2 === 1 })),
   { src: 'bougainvillea', pos: [-3.9, 0, -10.2], h: 1.5, sway: 0.25 },
   { src: 'bougainvillea', pos: [3.9, 0, -10.2], h: 1.45, sway: 0.25, flip: true },
-  // far shore: a palace skyline of chhatris and cypress across the lake (countdown → finale)
-  ...[-70, -48, -30, -12, 8, 26, 46, 68].map((x, i) => ({ src: 'chhatri', pos: [x, 0, -175 - (i % 3) * 8], h: 16 + (i % 3) * 5, glow: 0.05, far: true, flip: i % 2 === 1 })),
-  ...[-60, -40, -21, -3, 17, 36, 57].map((x, i) => ({ src: 'cypress', pos: [x, 0, -168 - (i % 2) * 6], h: 20 + (i % 3) * 4, glow: 0.04, far: true, flip: i % 2 === 0 })),
+  // (far-shore skyline removed: the open lake gives the couple's scene room to breathe — user, 13 Nov)
 ];
+
+const SOFT = new Set(['grass', 'bougainvillea']);
 
 const swayChunk = /* glsl */ `
   #include <begin_vertex>
@@ -123,7 +129,9 @@ export async function addPaintedLayers(scene, U, { base = '/img/art/', onGate, e
     const geo = new THREE.PlaneGeometry(w, l.h, 1, l.sway ? 8 : 1);
     geo.translate(0, l.h / 2, 0);
     // painted art keeps its exact colours (unlit, not tone-mapped) — it is already painted with light and shade
-    const mat = new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.45, side: THREE.DoubleSide, toneMapped: false, fog: false });
+    // garden pieces have soft (faded) edges: blend them — an alpha cut-off would turn the fade back into a hard line
+    const soft = SOFT.has(l.src);
+    const mat = new THREE.MeshBasicMaterial({ map: t, alphaTest: soft ? 0.02 : 0.45, transparent: soft, depthWrite: !soft, side: THREE.DoubleSide, toneMapped: false, fog: false });
     mat.color.setScalar(0.97);
     if (l.far) mat.color.set('#e8d2c4'); // sandstone palace across the lake in soft daylight haze
     if (l.sway) {

@@ -16,7 +16,7 @@ export const CINEMA_END = 5.0;
 export function buildCinemaOpening({ world, el, fx, onCoverGone, onDone }) {
   // The opening keeps wall-clock time even if a frame hitches (shader warm-up on a slow phone):
   // a stalled cover is worse than a skipped frame.
-  gsap.ticker.lagSmoothing(0);
+  gsap.ticker.lagSmoothing(1200, 33); // absorb only real stalls (>1.2 s); slow frames still keep wall-clock time
   const tl = gsap.timeline({ onComplete: () => gsap.ticker.lagSmoothing(500, 33) });
   world.coverDrift = false;
   const film = { t: world.state.override ?? 0 };
@@ -53,7 +53,7 @@ export function buildCinemaOpening({ world, el, fx, onCoverGone, onDone }) {
  * 2D petals burst, a warm glow washes over, and the hero still is revealed.
  */
 export function buildStillsOpening({ el, fx, onCoverGone, onDone }) {
-  gsap.ticker.lagSmoothing(0); // wall-clock: never stall the cover on a slow phone
+  gsap.ticker.lagSmoothing(1200, 33); // absorb only real stalls (>1.2 s); slow frames still keep wall-clock time // wall-clock: never stall the cover on a slow phone
   const tl = gsap.timeline({ onComplete: () => gsap.ticker.lagSmoothing(500, 33) });
   const glow = { p: 0 };
   if (el.letterbox?.length) tl.fromTo(el.letterbox, { scaleY: 0 }, { scaleY: 1, duration: 0.7, ease: 'power3.out' }, 0);

@@ -242,3 +242,43 @@ A tasteful painted bride and groom in miniature style (faceless, traditional), s
 ```
 Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Style: authentic Mughal / Rajasthani miniature painting, elegant and modest. Subject: a Gujarati bride and groom standing side by side in profile facing each other, holding hands, the bride in a red-and-white panetar saree with gold border and veil, the groom in an ivory sherwani with a red safa turban and a marigold garland; faces shown in classic miniature profile style without fine facial detail. Full figures, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no ground, no shadow, no frame or border, no text.
 ```
+
+---
+
+# Round 4 — the couple at the havan (for the arch in the couple's scene)
+
+### 25 · `couple-havan.png` — aspect **4:3** — count **x2**
+Replaces the standing bride and groom inside the gate's arch. **Attach the peacock AND the standing bride-and-groom image (#24) as references**, so the couple's faces and clothes stay the same. Save it in the `wed` folder and say "check"; it swaps in automatically.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference images exactly (same bride and groom, same outfits). Style: authentic Mughal / Rajasthani miniature painting — exquisite fine detail, gouache texture, delicate gold-leaf outlines, soft warm light from the fire. Subject: a Gujarati bride and groom seated cross-legged side by side on low ornate wooden patlas during the wedding ceremony, facing a small square brass-and-copper havan kund (sacred fire altar) in front of them with bright orange flames and a little curling smoke; the bride in a red-and-white panetar saree with gold border and veil on the left, the groom in an ivory sherwani with a red safa turban and a marigold garland on the right; their hands joined in the hast melap; a few brass bowls of rice, ghee and flowers and a small kalash beside the havan kund; scattered marigold and rose petals around them. Shown at a gentle three-quarter front angle, full figures and the whole havan kund inside the frame, centred. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no mandap, no wall, no floor colour, no shadow, no frame or border, no text. Crisp clean edges against the magenta.
+```
+
+---
+
+# Round 5 — the envelope and the kankotri (first frame)
+
+The envelope, the card and their animation are built in code, so any of these can be dropped in to make them richer. All except the seal are **full-bleed** (no magenta), and the code adds the Gujarati text. Same settings, peacock as reference.
+
+### 26 · `env-paper.png` — aspect **9:16** — count **x1**
+The envelope's paper.
+```
+A flat, full-frame texture for a luxury Gujarati wedding invitation envelope, filling the entire image edge to edge: deep kumkum-red handmade paper with a fine traditional Gujarati bandhani (tie-dye) pattern of tiny gold and ivory dots arranged in small diamond clusters, a soft silk-like sheen and subtle paper fibres. No objects, no border, no text, even lighting.
+```
+
+### 27 · `env-seal.png` — aspect **1:1** — count **x2**
+The wax seal that breaks on the tap.
+```
+Create a single isolated illustration asset for a luxury Indian wedding invitation website, and match the painting style of the reference image exactly. Subject: one round gold-and-red wax seal seen straight from the front, slightly irregular melted edge, with a finely embossed Lord Ganesha in the centre surrounded by a ring of small lotus petals, glossy highlights on the wax. Centred, whole seal inside the frame. Background: perfectly flat, solid, uniform pure magenta (#FF00FF) — no shadow, no frame, no text.
+```
+
+### 28 · `card-cover.png` — aspect **9:16** — count **x2**
+The front of the kankotri, seen before the two panels open (it is split down the middle).
+```
+A flat, full-frame painted front cover for a traditional Gujarati wedding kankotri, filling the entire image edge to edge, in Mughal / Rajasthani miniature style: ivory handmade paper, a rich border of red and gold with small marigold, mango-leaf and paisley motifs, a painted Lord Ganesha at the top centre in a small gold arch, a pair of small kalash with mango leaves and coconuts at the bottom corners, and a fine gold mandala ring in the middle. The CENTRE of the card (middle third) must stay plain ivory paper with NO text and NO pattern — the Gujarati title is added later. Symmetrical left-to-right. No text anywhere.
+```
+
+### 29 · `card-panel-inside.png` — aspect **9:16** — count **x1**
+The inner side of the two panels (seen while they swing open). Symmetric, so one image serves both.
+```
+A flat, full-frame painted texture for the inside of a traditional Gujarati wedding kankotri panel, filling the entire image edge to edge, in Mughal miniature style: ivory paper with a thin red-and-gold border, and running down the full height a slender painted vine of marigolds, red roses and green leaves with two small peacocks facing inward, delicate and airy. No text.
+```

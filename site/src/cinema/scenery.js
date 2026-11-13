@@ -518,8 +518,9 @@ export async function buildSet(scene, U, { tier, photoUrl, ganeshUrl }) {
   const HZ = -16;
   const panelImg = await loadImage('/img/art/paper-red.webp').catch(() => null);
   const emblem = await loadImage('/img/art/boota.webp').catch(() => null);
+  const silkPanel = await loadImage('/img/art/names-panel.webp').catch(() => null);
   // the courtyard behind the doors: a soft lawn with an ivory marble walk leading to the hero gate
-  const lawn = new THREE.Mesh(new THREE.PlaneGeometry(90, 22.4), new THREE.MeshStandardMaterial({ color: '#a7b98a', roughness: 1 }));
+  const lawn = new THREE.Mesh(new THREE.PlaneGeometry(90, 22.4), new THREE.MeshBasicMaterial({ color: '#9fb37c', toneMapped: false }));
   lawn.rotation.x = -Math.PI / 2;
   lawn.position.set(0, 0.004, -11.7);
   scene.add(lawn);
@@ -535,24 +536,11 @@ export async function buildSet(scene, U, { tier, photoUrl, ganeshUrl }) {
   }
   const frame = new THREE.Mesh(
     new THREE.PlaneGeometry(2.3, 4.5),
-    new THREE.MeshBasicMaterial({ map: tex(paintNamesPanel(panelImg, emblem)), toneMapped: false, fog: false }),
+    new THREE.MeshBasicMaterial({ map: tex(silkPanel || paintNamesPanel(panelImg, emblem)), toneMapped: false, fog: false }),
   );
   frame.position.set(0, 3.05, HZ - 0.12);
   scene.add(frame);
-  // gold wall-brackets for the two hanging lamps: a scrolled arm out of each outer pillar
-  for (const s of [-1, 1]) {
-    const pts = [[2.5, 5.95], [2.62, 6.2], [2.86, 6.42], [3.08, 6.42], [3.13, 6.36]].map(([x, y]) => new THREE.Vector3(s * x, y, HZ + 0.12));
-    const arm = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.035, 8), mats.gold);
-    scene.add(arm);
-    const scroll = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 8, 20, Math.PI * 1.5), mats.gold);
-    scroll.position.set(s * 2.66, 5.98, HZ + 0.12);
-    scroll.rotation.z = s > 0 ? 0 : Math.PI / 2;
-    scene.add(scroll);
-    const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.04, 14), mats.gold);
-    plate.rotation.x = Math.PI / 2;
-    plate.position.set(s * 2.5, 5.95, HZ + 0.1);
-    scene.add(plate);
-  }
+
   const silk = new THREE.Object3D(); // legacy handle (the silk backdrop is gone)
   const lanternMesh = new THREE.Object3D();
   const lanternPositions = [];

@@ -6,7 +6,7 @@ A cinematic Gujarati wedding invitation (kankotri) website, built as a gift from
 
 ## What it is
 
-- **Opening:** the guest taps the cover, and a pair of painted ivory doors swings open. The camera flies through a burst of marigold petals into a painted courtyard where the couple's names appear.
+- **Opening:** a traditional Gujarati kankotri envelope (bandhani paper, Ganesh wax seal, toran). One tap: the card is drawn out, its gatefold opens and the camera zooms into the painted gate. The guest taps the door, and the painted ivory doors swing open. The camera flies through a burst of marigold petals into a painted courtyard where the couple's names appear.
 - **Painted world:** a Three.js scene made of hand-painted Mughal-miniature cut-outs (generated with Google Flow): an ivory jharokha gate, peacocks, elephants, chhatris, cypress, banana plants, lamps, a toran, kalash and a rangoli, with a teal lake and a palace skyline behind.
 - **Sections:** the invitation, countdown, ceremony timings, venue and map, and a closing blessing with sharing. Each sits in a painted arch frame on painted paper.
 - **Mobile-first:** most guests open it from WhatsApp on a phone.
@@ -37,7 +37,6 @@ npx playwright test  # device tests (phones, desktop, no-WebGL, reduced motion)
 | `node scripts/art-cut.mjs art-src/<file>.jpg <name>` | Cuts a painted asset out of its flat background into `public/img/art/<name>.webp` |
 | `node scripts/arch-panels.mjs` | Builds the painted arch-panel pieces (crown, sides, sill) |
 | `node scripts/stills.mjs` | Renders the fallback stills (needs the dev server running) |
-| `node --env-file=.env.local scripts/hf-art.mjs` | Optional Higgsfield art generator (spending-capped; key kept in the git-ignored `.env.local`) |
 
 Prompts for every painted piece are in [`docs/flow-art-prompts.md`](docs/flow-art-prompts.md).
 

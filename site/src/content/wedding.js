@@ -72,6 +72,8 @@ const wedding = {
   copy: {
     openCta: 'આમંત્રણ ખોલો',
     openHelper: 'Tap to open',
+    introCta: 'કંકોતરી ખોલો',
+    introHelper: 'Tap the envelope',
     skip: 'છોડો ›',
     scrollCue: 'નીચે સ્ક્રોલ કરો',
     invitationTitle: 'હરખનું તેડું',
