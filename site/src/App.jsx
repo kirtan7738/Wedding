@@ -25,7 +25,7 @@ export default function App() {
   useEffect(() => initScroll(), []);
   const worldRef = useRef(null);
   const opening = useOpening(worldRef);
-  const { refs, state, tier, player, open, skip } = opening;
+  const { refs, state, tier, player, sfx, open, skip } = opening;
   const { canvasRef } = useCinema(tier, worldRef);
   const [introDone, setIntroDone] = useState(false);
 
@@ -37,7 +37,10 @@ export default function App() {
       <div className="film-vignette" aria-hidden="true" />
       <div className="film-grain" aria-hidden="true" />
       {state !== 'open' && <Cover refs={refs} onOpen={open} opening={state === 'opening'} />}
-      {state === 'cover' && !introDone && <IntroEnvelope worldRef={worldRef} onBegin={() => player?.start()} onDone={() => setIntroDone(true)} />}
+      {state === 'cover' && !introDone && <IntroEnvelope worldRef={worldRef} onBegin={() => {
+            player?.start({ intro: true }); // the song's intro begins on the envelope tap and waits for the doors
+            sfx.current?.intro();
+          }} onDone={() => setIntroDone(true)} />}
       <OpeningLayer refs={refs} tier={tier} />
       <div className="letterbox letterbox--top" aria-hidden="true" />
       <div className="letterbox letterbox--bottom" aria-hidden="true" />

@@ -30,7 +30,7 @@ const RULES = {
   thali: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'devta-left': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'devta-right': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
-  clouds: [{ box: [0, 0, 1, 1], erase: 'magenta' }],
+  clouds: [{ box: [0, 0, 1, 1], erase: 'magenta' }, { fadeSides: 0.1 }],
   'dhol-shehnai': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'mehndi-hands': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
   'pheras': [{ box: [0, 0, 1, 1], erase: 'magenta' }],
@@ -62,7 +62,9 @@ for (const [cx, cy] of [[0.02, 0.02], [0.98, 0.02], [0.02, 0.6], [0.98, 0.35]]) 
   }
 }
 const med = (k) => samples.map((s) => s[k]).sort((a, b) => a - b)[samples.length >> 1];
-const bg = [med(0), med(1), med(2)];
+// images whose subject reaches the sampled corners: give the true backdrop colour
+const BG = { clouds: [252, 1, 252] };
+const bg = BG[name] || [med(0), med(1), med(2)];
 const dist = (r, g, b) => Math.hypot(r - bg[0], g - bg[1], b - bg[2]);
 
 const T0 = 40; // ≤ this distance: pure background
@@ -236,7 +238,7 @@ for (const rule of RULES[name] || []) {
 // magenta spill: soft glows (halos, smoke, cloud edges) painted against the pink backdrop pick up a pink-lavender
 // cast. Within a band near the cut-out edge, pull magenta-tinted pixels back to neutral/warm (the subject's own
 // pinks, deeper inside, are untouched).
-const DESPILL = { 'devta-left': 60, 'devta-right': 60, pheras: 70, clouds: 40 };
+const DESPILL = { 'devta-left': 60, 'devta-right': 60, pheras: 70, clouds: 60 };
 if (DESPILL[name]) {
   const band = DESPILL[name];
   const dist = new Int32Array(W * H).fill(1e9);
@@ -270,7 +272,7 @@ if (DESPILL[name]) {
 }
 
 // soft left edge for subjects the painting cut off at the frame's left side
-const FADE_LEFT = { 'devta-left': 0.05, 'devta-right': 0.05 };
+const FADE_LEFT = { 'devta-left': 0.08, 'devta-right': 0.14 };
 if (FADE_LEFT[name]) {
   const fw = Math.round(W * FADE_LEFT[name]);
   for (let y = 0; y < H; y++) for (let x = 0; x < fw; x++) out[px(x, y) + 3] = Math.round(out[px(x, y) + 3] * (x / fw) ** 1.5);
@@ -294,6 +296,54 @@ if (MIRROR[name]) {
       out[d + 2] = out[s + 2];
       out[d + 3] = out[s + 3];
     }
+  }
+}
+
+// edge bleed: invisible (alpha 0) pixels still carry the backdrop's magenta; when the texture is scaled on screen,
+// filtering mixes that colour into the edges as a pink rim. Fill them with the colour of the nearest painted pixel
+// (a few rings outward), and the rest with a neutral warm tone.
+{
+  const filled = new Uint8Array(W * H);
+  let frontier = [];
+  for (let k = 0; k < W * H; k++) {
+    if (out[k * 4 + 3] > 8) filled[k] = 1;
+  }
+  for (let k = 0; k < W * H; k++) {
+    if (filled[k]) continue;
+    const x = k % W;
+    const y = (k / W) | 0;
+    if ((x > 0 && filled[k - 1]) || (x < W - 1 && filled[k + 1]) || (y > 0 && filled[k - W]) || (y < H - 1 && filled[k + W])) frontier.push(k);
+  }
+  for (let ring = 0; ring < 6 && frontier.length; ring++) {
+    const next = [];
+    const done = [];
+    for (const k of frontier) {
+      if (filled[k]) continue;
+      const x = k % W;
+      const y = (k / W) | 0;
+      let r = 0, g = 0, b = 0, n = 0;
+      for (const nk of [x > 0 ? k - 1 : -1, x < W - 1 ? k + 1 : -1, y > 0 ? k - W : -1, y < H - 1 ? k + W : -1]) {
+        if (nk < 0 || !filled[nk]) continue;
+        r += out[nk * 4];
+        g += out[nk * 4 + 1];
+        b += out[nk * 4 + 2];
+        n++;
+      }
+      if (!n) continue;
+      out[k * 4] = r / n;
+      out[k * 4 + 1] = g / n;
+      out[k * 4 + 2] = b / n;
+      done.push(k);
+      for (const nk of [x > 0 ? k - 1 : -1, x < W - 1 ? k + 1 : -1, y > 0 ? k - W : -1, y < H - 1 ? k + W : -1]) if (nk >= 0 && !filled[nk]) next.push(nk);
+    }
+    for (const k of done) filled[k] = 1;
+    frontier = next;
+  }
+  for (let k = 0; k < W * H; k++) {
+    if (filled[k]) continue;
+    out[k * 4] = 236;
+    out[k * 4 + 1] = 228;
+    out[k * 4 + 2] = 214;
   }
 }
 

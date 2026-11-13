@@ -46,7 +46,13 @@ export const LAYERS = [
   { src: 'grass', pos: [2.5, 0, 4.9], h: 0.9, flip: true },
   { src: 'grass', pos: [-4.2, 0, 3.6], h: 1.2, flip: true },
   { src: 'grass', pos: [4.2, 0, 3.6], h: 1.2 },
+  // painted Mughal clouds drifting slowly across the sky (parallax: nearer banks drift faster)
+  { src: 'clouds', pos: [-6, 8.6, 0.6], h: 2.2, drift: { speed: 0.12, span: 22 }, soft: true },
+  { src: 'clouds', pos: [7, 10.6, 0.4], h: 2.6, drift: { speed: 0.08, span: 26 }, soft: true, flip: true },
   // --- shot 1: the hero tableau (HZ = −16), composed straight-on like a miniature painting
+  { src: 'clouds', pos: [-3, 8.3, -24], h: 2.6, drift: { speed: 0.09, span: 30 }, soft: true },
+  { src: 'clouds', pos: [9, 10.2, -26], h: 3.2, drift: { speed: 0.06, span: 34 }, soft: true, flip: true },
+  { src: 'clouds', pos: [-12, 7.2, -22], h: 2.0, drift: { speed: 0.1, span: 30 }, soft: true },
   // spaced out (user, 13 Nov: "too noisy, add some space") — each element gets its own band of the frame
   // chhatri, cypress and plantain each own a separate band of the frame (they used to stack behind one another)
   { src: 'cypress', pos: [-9.6, 0, -19], h: 8.4, sway: 0.5 },
@@ -54,8 +60,8 @@ export const LAYERS = [
   // pushpa vrishti: Shiv-Parvati (left) and Lakshmi-Narayan (right) lean out of clouds beside the dome and shower
   // flowers on the couple (the falling petals are the live 3D shower in World.js). Phones: smaller, at the top corners.
   // hand: where the petals leave the painting (u, v from the image's top-left); pour: direction, toward the couple
-  { src: 'devta-left', pos: [-4.9, 5.85, -15.5], h: 3.1, float: 0.1, divine: { hand: [0.76, 0.46], pour: [1, -0.15, 0.25] }, portrait: { pos: [-1.85, 7.35, -14.9], h: 1.9 } },
-  { src: 'devta-right', pos: [4.9, 5.85, -15.5], h: 3.1, float: 0.1, flip: true, divine: { hand: [0.74, 0.47], pour: [-1, -0.15, 0.25] }, portrait: { pos: [1.85, 7.35, -14.9], h: 1.9 } },
+  { src: 'devta-left', pos: [-4.9, 5.85, -15.5], h: 3.1, float: 0.1, soft: true, divine: { hand: [0.76, 0.46], pour: [1, -0.15, 0.25] }, portrait: { pos: [-1.85, 7.35, -14.9], h: 1.9 } },
+  { src: 'devta-right', pos: [4.9, 5.85, -15.5], h: 3.1, float: 0.1, soft: true, flip: true, divine: { hand: [0.74, 0.47], pour: [-1, -0.15, 0.25] }, portrait: { pos: [1.85, 7.35, -14.9], h: 1.9 } },
   { src: 'gate', pos: [0, 0, -16], h: 9, tag: 'hero-gate' },
   // the couple, painted (Flow), framed by the arch on the crimson silk — the havan scene replaces the standing pair
   { src: 'couple', pos: [0, 0.86, -15.96], h: 2.6 },
@@ -152,7 +158,7 @@ export async function addPaintedLayers(scene, U, { base = '/img/art/', onGate, e
     geo.translate(0, l.h / 2, 0);
     // painted art keeps its exact colours (unlit, not tone-mapped) — it is already painted with light and shade
     // garden pieces have soft (faded) edges: blend them — an alpha cut-off would turn the fade back into a hard line
-    const soft = SOFT.has(l.src);
+    const soft = SOFT.has(l.src) || l.soft;
     const mat = new THREE.MeshBasicMaterial({ map: t, alphaTest: soft ? 0.02 : 0.45, transparent: soft, depthWrite: !soft, side: THREE.DoubleSide, toneMapped: false, fog: false });
     mat.color.setScalar(0.97);
     if (l.far) mat.color.set('#e8d2c4'); // sandstone palace across the lake in soft daylight haze
@@ -208,6 +214,17 @@ export async function addPaintedLayers(scene, U, { base = '/img/art/', onGate, e
 export function floatLayers(meshes, time, arrive = 1) {
   const a = arrive * arrive * (3 - 2 * arrive);
   for (const m of meshes) {
+    const d = m.userData.layer.drift;
+    if (d) {
+      // drift right, wrap at the far edge, fade in/out near the ends so the wrap is never seen
+      if (m.userData.baseX == null) m.userData.baseX = m.position.x;
+      const u = (((m.userData.baseX + time * d.speed + d.span / 2) % d.span) + d.span) % d.span;
+      m.position.x = u - d.span / 2;
+      const edge = Math.min(u, d.span - u) / (d.span * 0.15);
+      m.material.opacity = Math.min(1, edge);
+      m.material.transparent = true;
+      continue;
+    }
     const f = m.userData.layer.float;
     if (!f) continue;
     if (m.userData.baseY == null) m.userData.baseY = m.position.y;
@@ -215,7 +232,7 @@ export function floatLayers(meshes, time, arrive = 1) {
     m.position.y = m.userData.baseY + Math.sin(time * 0.55 + ph) * f + (1 - a) * 2.6;
     m.rotation.z = Math.sin(time * 0.4 + ph * 1.3) * 0.025;
     m.material.opacity = a;
-    m.material.transparent = a < 1;
+    m.material.transparent = a < 1 || !!m.userData.layer.soft; // soft pieces always blend (else they draw before the clouds and get covered)
     const halo = m.userData.halo;
     if (halo) halo.material.opacity = a * (0.55 + 0.2 * Math.sin(time * 1.1 + ph));
     const sparks = m.userData.sparks;

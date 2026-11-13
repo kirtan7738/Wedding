@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import wedding from '../content/wedding.js';
 import { createMusicPlayer, attachVisibilityPause } from '../lib/audio.js';
+import { createSfx } from '../lib/sfx.js';
 import { detectTier } from '../lib/tier.js';
 import { buildStaticOpening } from './timeline.js';
 import { buildCinemaOpening, buildStillsOpening } from './cinemaTimeline.js';
@@ -33,6 +34,7 @@ export function useOpening(worldRef) {
   const fxRef = useRef(null);
   const ambientRef = useRef(null);
   const skippedRef = useRef(false);
+  const sfxRef = useRef(null);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -51,10 +53,13 @@ export function useOpening(worldRef) {
         setTier(t);
       });
     const p = createMusicPlayer(wedding.music);
+    window.__music = p;
+    sfxRef.current = createSfx({ getContext: () => p.context(), shehnaiSrc: wedding.music.shehnai });
     setPlayer(p);
     const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1200));
     idle(() => {
       p.preload();
+      sfxRef.current?.preload();
       preloadConfetti();
     });
     const detach = attachVisibilityPause(p);
@@ -96,7 +101,10 @@ export function useOpening(worldRef) {
     if (openedRef.current) return;
     openedRef.current = true;
     window.__openCount = (window.__openCount || 0) + 1;
-    player?.start();
+    // doors: creak (+ shehnai) now; the song jumps on the beat so its first verse lands with the camera
+    player?.unlock();
+    sfxRef.current?.door();
+    player?.cue({ arriveIn: tierRef.current === 'static' ? 0.8 : 3.9 }); // the first verse lands with the camera
     navigator.vibrate?.(15);
     setState('opening');
 
@@ -167,5 +175,5 @@ export function useOpening(worldRef) {
     tl.progress(1, false);
   }, []);
 
-  return { refs, state, tier, player, open, skip, fxRef };
+  return { refs, state, tier, player, sfx: sfxRef, open, skip, fxRef };
 }

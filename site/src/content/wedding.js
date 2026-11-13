@@ -67,7 +67,24 @@ const wedding = {
   },
 
 
-  music: { src: null, label: 'જુડી જોડી', loopStart: 0, loopEnd: null, volume: 0.4 },
+  // Judi Jodi (Ramayana, A.R. Rahman) — everything on the song's 135 BPM beat grid (beat 0.4444 s, phase 0.228 s):
+  // the intro (0–17.1 s) plays from the envelope tap and loops 24 beats (5.56–16.23 s) while the guest waits; the door
+  // tap jumps on the beat so the first sung line (17.115 s) lands as the camera reaches the couple; the song then loops
+  // a 225-beat (100 s) section. The spoken monologue (1:10.9–1:22.9, 27 beats) is cut out of the file, so the loop
+  // ends at 105.106 s. Seams are crossfaded in the file. The shehnai plays on the door tap when `shehnai` is set.
+  music: {
+    src: '/audio/judi-jodi.m4a',
+    label: 'જુડી જોડી',
+    startAt: 0,
+    verseAt: 17.1152,
+    loopStart: 17.1152,
+    loopEnd: 105.1064,
+    introLoop: [5.5608, 16.2264],
+    beat: 0.4444,
+    beatPhase: 0.228,
+    volume: 0.4,
+    shehnai: null,
+  },
 
   copy: {
     openCta: 'આમંત્રણ ખોલો',

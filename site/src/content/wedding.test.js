@@ -35,9 +35,23 @@ describe('wedding content', () => {
     expect(wedding.signoff).toBe('મિસ્ત્રી પરિવાર · સોની પરિવાર');
   });
 
-  it('shows no couple photos (user, 12 Nov: "images appear forcefully") and starts with no music file', () => {
+  it('shows no couple photos (user, 12 Nov: "images appear forcefully")', () => {
     expect(wedding.photos).toBeUndefined();
     expect(wedding.copy.interlude).toBeTruthy();
-    expect(wedding.music.src).toBeNull();
+  });
+
+  it('plays Judi Jodi on the 135 BPM beat grid: verse at 17.115 s, a 225-beat loop minus the 27-beat monologue', () => {
+    const m = wedding.music;
+    expect(m.src).toBe('/audio/judi-jodi.m4a');
+    expect(m.startAt).toBe(0);
+    expect(m.beat).toBeCloseTo(0.4444, 4);
+    const onGrid = (t) => Math.abs((t - m.beatPhase) / m.beat - Math.round((t - m.beatPhase) / m.beat)) < 0.01;
+    expect(m.verseAt).toBeCloseTo(17.115, 3);
+    expect(onGrid(m.verseAt)).toBe(true);
+    expect(m.loopStart).toBe(m.verseAt);
+    // 225 beats of song, minus the 27-beat spoken passage (1:10.9–1:22.9) cut from the file
+    expect((m.loopEnd - m.loopStart) / m.beat).toBeCloseTo(198, 1);
+    expect(m.introLoop.every(onGrid)).toBe(true);
+    expect(((m.introLoop[1] - m.introLoop[0]) / m.beat) % 3).toBeCloseTo(0, 1); // whole bars
   });
 });

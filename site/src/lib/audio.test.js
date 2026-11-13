@@ -13,7 +13,7 @@ class FakeCtx {
   suspend() { this.calls.push('suspend'); this.state = 'suspended'; return Promise.resolve(); }
   close() { this.calls.push('close'); return Promise.resolve(); }
   createGain() { const g = { gain: new FakeParam(), connect() {} }; this.gainNode = g; return g; }
-  createBufferSource() { const s = { connect() {}, start: vi.fn(), stop: vi.fn(), loop: false }; this.source = s; return s; }
+  createBufferSource() { const s = { connect() {}, start: vi.fn(), stop: vi.fn(), loop: false }; this.source = s; (this.sources ||= []).push(s); return s; }
   decodeAudioData() { return Promise.resolve({ duration: 90 }); }
 }
 const okFetch = () => Promise.resolve({ ok: true, arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)) });
@@ -98,6 +98,84 @@ describe('attachVisibilityPause', () => {
     flip(true);
     flip(false);
     expect(player.isPlaying()).toBe(false);
+  });
+});
+
+describe('music arc (13 Nov): intro once, then a bar-aligned loop; unlock on the envelope, song after the doors', () => {
+  it('plays the intro from startAt, then loops loopStart..loopEnd', async () => {
+    const player = make({ startAt: 0, loopStart: 17.745, loopEnd: 117.867 });
+    await player.start();
+    expect(FakeCtx.last.source.start).toHaveBeenCalledWith(0, 0);
+    expect(FakeCtx.last.source.loopStart).toBe(17.745);
+    expect(FakeCtx.last.source.loopEnd).toBe(117.867);
+  });
+
+  it('unlock() opens the audio context inside the tap without playing, and start() reuses it', async () => {
+    const player = make();
+    player.unlock();
+    const ctx = FakeCtx.last;
+    expect(ctx.calls).toContain('resume');
+    expect(player.isPlaying()).toBe(false);
+    expect(player.context()).toBe(ctx);
+    await player.start();
+    expect(FakeCtx.last).toBe(ctx);
+    expect(player.isPlaying()).toBe(true);
+  });
+
+  it('start({ delay }) schedules the song and its fade-in for later', async () => {
+    const player = make({ startAt: 0 });
+    await player.start({ delay: 2.5 });
+    expect(FakeCtx.last.source.start).toHaveBeenCalledWith(2.5, 0);
+    expect(FakeCtx.last.gainNode.gain.events).toContainEqual(['ramp', 0.4, 4]);
+  });
+});
+
+describe('verse sync (13 Nov): the intro waits on the envelope, the first verse lands when the doors open', () => {
+  const opts = { startAt: 0, loopStart: 17.745, loopEnd: 117.867, introLoop: [6.157, 16.981], verseAt: 17.745, beat: 0.451, beatPhase: 0.745 };
+
+  it('start() plays the intro and loops its bars 4–12 while the guest waits', async () => {
+    const player = make(opts);
+    await player.start({ intro: true });
+    const src = FakeCtx.last.sources[0];
+    expect(src.start).toHaveBeenCalledWith(0, 0);
+    expect(src.loopStart).toBe(6.157);
+    expect(src.loopEnd).toBe(16.981);
+  });
+
+  it('cue() jumps on the next beat so the first verse arrives with the camera', async () => {
+    const player = make(opts);
+    await player.start({ intro: true });
+    const ctx = FakeCtx.last;
+    ctx.currentTime = 10; // the guest taps the door 10 s after the envelope
+    player.cue({ arriveIn: 4 });
+    const song = ctx.sources[1];
+    const [when, offset] = song.start.mock.calls[0];
+    expect(when).toBeCloseTo(10.216, 3); // the next beat of the intro (0.745 + 21 × 0.451)
+    // the verse (17.745) sounds k whole beats later, as close as possible to 10 + 4 s
+    const verseAt = when + (17.745 - offset);
+    expect(Math.abs(verseAt - 14)).toBeLessThanOrEqual(0.451 / 2 + 1e-6);
+    expect(Math.abs(((17.745 - offset) / 0.451) - Math.round((17.745 - offset) / 0.451))).toBeLessThan(1e-6);
+    expect(song.loopStart).toBe(17.745);
+    expect(song.loopEnd).toBe(117.867);
+    expect(ctx.sources[0].stop).toHaveBeenCalled(); // the intro bows out after the crossfade
+  });
+
+  it('a plain start() (the music button for a returning guest) plays the whole song from the top', async () => {
+    const player = make(opts);
+    await player.start();
+    const src = FakeCtx.last.sources[0];
+    expect(src.start).toHaveBeenCalledWith(0, 0);
+    expect(src.loopStart).toBe(17.745);
+  });
+
+  it('cue() without a running intro starts the song so the verse still lands on time', async () => {
+    const player = make(opts);
+    player.unlock();
+    await player.cue({ arriveIn: 4 });
+    const [when, offset] = FakeCtx.last.sources[0].start.mock.calls[0];
+    expect(when).toBe(0);
+    expect(offset).toBeCloseTo(17.745 - 4, 6);
+    expect(player.isPlaying()).toBe(true);
   });
 });
 
